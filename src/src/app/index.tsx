@@ -1,9 +1,12 @@
-import { Text, View, StyleSheet } from "react-native";
-
+import { StyleSheet, View } from "react-native";
+import BotonPrimario from "../components/BotonPrimario";
 export default function Index() {
   return (
     <View style={styles.container}>
-      <Text>Edit src/app/index.tsx to edit this screen.</Text>
+      <BotonPrimario
+        label="Continuar"
+        onPress={() => console.log("¡Presionado!")}
+      />
     </View>
   );
 }
