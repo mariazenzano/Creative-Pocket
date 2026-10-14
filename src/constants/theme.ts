@@ -8,14 +8,16 @@ export const theme = {
     sm: 8, // gap between lines inside a card
     md: 16, // gap between items in a row
     lg: 24, // gap between blocks of the screen
-    xl: 32, // biggest gap: padding of the whole screen
+    xl: 32,
+    xxl: 40, // biggest gap: padding of the whole screen
   },
   // Radius: select a box or button → Design panel → Corner radius.
   radius: {
     sm: 8, // chips and small buttons
     md: 12, // buttons and inputs
     lg: 16,
-    max1: 30, // cards
+    max1: 30,
+    max2: 40, // cards
     full: 999, // circles and pills: leave it as is
   },
   // Text sizes: select a text → Design panel → Typography → Font size.
