@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     justifyContent: "flex-start",
     paddingLeft: 0,
-    paddingVertical: theme.spacing.xl,
+    paddingVertical: theme.spacing.md,
   },
   brillo: {
     shadowColor: palette.primary[100],

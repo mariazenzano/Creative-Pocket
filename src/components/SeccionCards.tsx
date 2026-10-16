@@ -17,7 +17,7 @@ export default function SeccionCards() {
 const styles = StyleSheet.create({
   contenedor: {
     paddingHorizontal: 20,
-    paddingVertical: 15,
+    paddingVertical: 30,
     gap: 15,
   },
 });

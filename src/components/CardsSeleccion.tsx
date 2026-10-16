@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { theme } from "../constants/theme";
 
-    type Props={
-        titulo: string;
-        icono: string;
-    }
+type Props = {
+  titulo: string;
+  icono: string;
+};
 
-export default function ActivityCard({titulo, icono}: Props) {
+export default function ActivityCard({ titulo, icono }: Props) {
   const [marcado, setMarcado] = useState(false);
 
   return (
@@ -33,12 +34,12 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 12,
+    padding: 14,
     backgroundColor: "#080808",
     borderWidth: 1,
     borderColor: "#843BFF",
     borderRadius: 8,
-    gap: 15,
+    gap: 20,
   },
 
   icono: {
@@ -47,7 +48,7 @@ const styles = StyleSheet.create({
 
   titulo: {
     color: "#FFFFFF",
-    fontSize: 12,
+    fontSize: theme.text.heading,
     flex: 1,
   },
 
