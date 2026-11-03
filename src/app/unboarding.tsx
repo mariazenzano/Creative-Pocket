@@ -20,7 +20,7 @@ export default function Index() {
 
         <BotonPrimario
           label="Continuar"
-          onPress={() => console.log("¡Presionado!")}
+          onPress={() => router.replace("/(tabs)")}
         />
       </View>
     </SafeAreaView>
