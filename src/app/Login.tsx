@@ -11,6 +11,8 @@ import { theme } from "../constants/theme";
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   return (
     <ScrollView
@@ -21,11 +23,12 @@ export default function Login() {
 
       <View style={styles.form}>
         <Formulario
-          label="Usuario"
-          placeholder="Nombre de usuario"
+          label={isRegistering ? "Nombre" : "Usuario"}
+          placeholder={isRegistering ? "Tu nombre" : "Nombre de usuario"}
           value={username}
           onChangeText={setUsername}
         />
+
         <Formulario
           label="Contraseña"
           placeholder="Contraseña"
@@ -33,15 +36,30 @@ export default function Login() {
           onChangeText={setPassword}
           isPassword
         />
-      </View>
 
+        {isRegistering && (
+          <Formulario
+            label="Confirmar contraseña"
+            placeholder="Repite tu contraseña"
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+            isPassword
+          />
+        )}
+      </View>
       <Enlace
-        text="Olvidaste tu contraseña?"
-        linkLabel="Recuperala"
-        onPress={() => {}}
+        text={isRegistering ? "¿Ya tienes cuenta?" : "¿No tienes cuenta?"}
+        linkLabel={isRegistering ? "Inicia sesión" : "Regístrate"}
+        onPress={() => {
+          setIsRegistering(!isRegistering);
+          setConfirmPassword("");
+        }}
       />
 
-      <BotonPrimario label="Login with Email" onPress={() => {}} />
+      <BotonPrimario
+        label={isRegistering ? "Crear cuenta" : "Iniciar sesión"}
+        onPress={() => {}}
+      />
 
       <Text style={styles.or}>Or</Text>
 
@@ -62,12 +80,6 @@ export default function Login() {
           onPress={() => {}}
         />
       </View>
-
-      <Enlace
-        text="No tienes cuenta?"
-        linkLabel="Registrate"
-        onPress={() => {}}
-      />
     </ScrollView>
   );
 }
