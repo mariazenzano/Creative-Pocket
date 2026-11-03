@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { theme } from "../constants/theme";
-import BotonOpciones from "./BotonOpciones";
-import BotonPrimario from "./BotonPrimario";
-import EncabezadoLogin from "./EncabezadoLogin";
-import Enlace from "./Enlace";
-import Formulario from "./Formulario";
+import BotonOpciones from "../components/BotonOpciones";
+import BotonPrimario from "../components/BotonPrimario";
+import EncabezadoLogin from "../components/EncabezadoLogin";
+import Enlace from "../components/Enlace";
+import Formulario from "../components/Formulario";
 
 export default function Login() {
   const [username, setUsername] = useState("");
