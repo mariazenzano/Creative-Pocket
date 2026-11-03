@@ -1,23 +1,28 @@
-import { StyleSheet, Text, View } from "react-native";
+import { palette } from "@/constants/colors";
+import { theme } from "@/constants/theme";
+import { useRouter } from "expo-router";
+import { StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function InicioScreen() {
-  return (
-    <View style={styles.container}>
-      {/* Solo el título por ahora, tal como te lo pide la instrucción */}
-      <Text style={styles.title}>Inicio</Text>
-    </View>
-  );
+export default function Index() {
+  const router = useRouter();
+  return <SafeAreaView style={styles.screen}>
+
+
+
+    
+  </SafeAreaView>;
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#fff",
+    justifyContent: "center",
   },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
+
+  screen: {
+    paddingHorizontal: theme.spacing.xxl,
+    paddingVertical: theme.spacing.sm,
+    backgroundColor: palette.neutral[800],
   },
 });
