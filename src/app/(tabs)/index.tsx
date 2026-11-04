@@ -5,16 +5,18 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { palette } from "@/constants/colors";
 import { loadUser } from "@/storage/user";
 
-import DailyChallenges from "@/components/home/DailyChallenges";
-import GreetingSection from "@/components/home/GreetingSection";
+import DailyChallenges, {
+  type Challenge,
+} from "@/components/home/DailyChallenges";
 import HomeHeader from "@/components/home/HomeHeader";
+import type { Lesson } from "@/components/home/LessonCard";
 import LessonCarousel from "@/components/home/LessonCarousel";
 import StreakCalendar from "@/components/home/StreakCalendar";
 import WeeklyMinutes from "@/components/home/WeeklyMinutes";
+import BackgroundGlow from "../../components/BackgroundGlow";
+import GreetingSection from "../../components/home/GreetingSection";
 
-import type { Challenge } from "@/components/home/DailyChallenges";
-import type { Lesson } from "@/components/home/LessonCard";
-import BackgroundGlow from "../../components/home/backgroundGlow";
+// Sample lessons
 const lessons: Lesson[] = [
   {
     id: "1",
@@ -39,6 +41,7 @@ const lessons: Lesson[] = [
   },
 ];
 
+// Sample daily challenges
 const challenges: Challenge[] = [
   {
     id: "1",
@@ -63,6 +66,7 @@ const challenges: Challenge[] = [
 export default function Index() {
   const [userName, setUserName] = useState("creativo");
 
+  // Load saved user
   useEffect(() => {
     const getUser = async () => {
       try {
@@ -79,10 +83,12 @@ export default function Index() {
     getUser();
   }, []);
 
+  // Handle lesson selection
   const handleContinueLesson = (id: string) => {
     Alert.alert("Continuar lección", `Lección seleccionada: ${id}`);
   };
 
+  // Handle challenge selection
   const handleStartChallenge = (id: string) => {
     Alert.alert("Iniciar reto", `Reto seleccionado: ${id}`);
   };
