@@ -18,7 +18,7 @@ import DailyChallenges from "@/components/home/DailyChallenges";
 
 import type { Lesson } from "@/components/home/LessonCard";
 import type { Challenge } from "@/components/home/DailyChallenges";
-import BackgroundGlow from "../../components/home/backgroundGlow";
+import BackgroundGlow from "../../components/home/BackgroundGlow";
 const lessons: Lesson[] = [
   {
     id: "1",
