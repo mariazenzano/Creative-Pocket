@@ -1,20 +1,24 @@
 import { useEffect, useState } from "react";
-import { Alert, ScrollView, StyleSheet } from "react-native";
+import {
+  Alert,
+  ScrollView,
+  StyleSheet,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { palette } from "@/constants/colors";
 import { loadUser } from "@/storage/user";
 
-import BackgroundGlow from "@/components/BackgroundGlow";
-import type { Challenge } from "@/components/home/DailyChallenges";
-import DailyChallenges from "@/components/home/DailyChallenges";
-import GreetingSection from "@/components/home/GreetingSection";
 import HomeHeader from "@/components/home/HomeHeader";
-import type { Lesson } from "@/components/home/LessonCard";
+import GreetingSection from "@/components/home/GreetingSection";
 import LessonCarousel from "@/components/home/LessonCarousel";
 import StreakCalendar from "@/components/home/StreakCalendar";
 import WeeklyMinutes from "@/components/home/WeeklyMinutes";
+import DailyChallenges from "@/components/home/DailyChallenges";
 
+import type { Lesson } from "@/components/home/LessonCard";
+import type { Challenge } from "@/components/home/DailyChallenges";
+import BackgroundGlow from "../../components/BackgroundGlow";
 const lessons: Lesson[] = [
   {
     id: "1",
@@ -89,24 +93,35 @@ export default function Index() {
 
   return (
     <SafeAreaView style={styles.screen}>
-      <BackgroundGlow />
+      
+      
+       <BackgroundGlow />
 
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.content}
-      >
+  <ScrollView
+    showsVerticalScrollIndicator={false}
+    contentContainerStyle={styles.content}
+  >
         <HomeHeader
           onNotificationsPress={() =>
             Alert.alert("Notificaciones", "Próximamente")
           }
-          onProfilePress={() => Alert.alert("Perfil", "Próximamente")}
+          onProfilePress={() =>
+            Alert.alert("Perfil", "Próximamente")
+          }
         />
 
         <GreetingSection name={userName} />
 
-        <LessonCarousel lessons={lessons} onContinue={handleContinueLesson} />
+        <LessonCarousel
+          lessons={lessons}
+          onContinue={handleContinueLesson}
+        />
 
-        <StreakCalendar completedGoals={6} totalGoals={7} streakDays={12} />
+        <StreakCalendar
+          completedGoals={6}
+          totalGoals={7}
+          streakDays={12}
+        />
 
         <WeeklyMinutes minutes={45} />
 
