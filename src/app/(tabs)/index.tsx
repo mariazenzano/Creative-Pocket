@@ -1,6 +1,10 @@
+
 import { useEffect, useState } from "react";
 import { Alert, ScrollView, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+
+
+import Animated, { FadeInDown } from "react-native-reanimated";
 
 import { palette } from "@/constants/colors";
 import { loadUser } from "@/storage/user";
@@ -66,7 +70,7 @@ const challenges: Challenge[] = [
 export default function Index() {
   const [userName, setUserName] = useState("creativo");
 
-  // Load saved user
+  
   useEffect(() => {
     const getUser = async () => {
       try {
@@ -83,12 +87,12 @@ export default function Index() {
     getUser();
   }, []);
 
-  // Handle lesson selection
+
   const handleContinueLesson = (id: string) => {
     Alert.alert("Continuar lección", `Lección seleccionada: ${id}`);
   };
 
-  // Handle challenge selection
+
   const handleStartChallenge = (id: string) => {
     Alert.alert("Iniciar reto", `Reto seleccionado: ${id}`);
   };
@@ -101,25 +105,62 @@ export default function Index() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.content}
       >
-        <HomeHeader
-          onNotificationsPress={() =>
-            Alert.alert("Notificaciones", "Próximamente")
-          }
-          onProfilePress={() => Alert.alert("Perfil", "Próximamente")}
-        />
+        
+        <Animated.View
+          entering={FadeInDown.delay(0).duration(350)}
+        >
+          <HomeHeader
+            onNotificationsPress={() =>
+              Alert.alert("Notificaciones", "Próximamente")
+            }
+            onProfilePress={() => Alert.alert("Perfil", "Próximamente")}
+          />
+        </Animated.View>
 
-        <GreetingSection name={userName} />
+       
+        <Animated.View
+          entering={FadeInDown.delay(100).duration(350)}
+        >
+          <GreetingSection name={userName} />
+        </Animated.View>
 
-        <LessonCarousel lessons={lessons} onContinue={handleContinueLesson} />
+       
+        <Animated.View
+          entering={FadeInDown.delay(200).duration(350)}
+        >
+          <LessonCarousel
+            lessons={lessons}
+            onContinue={handleContinueLesson}
+          />
+        </Animated.View>
 
-        <StreakCalendar completedGoals={6} totalGoals={7} streakDays={12} />
+       
+        <Animated.View
+          entering={FadeInDown.delay(300).duration(350)}
+        >
+          <StreakCalendar
+            completedGoals={6}
+            totalGoals={7}
+            streakDays={12}
+          />
+        </Animated.View>
 
-        <WeeklyMinutes minutes={45} />
+        
+        <Animated.View
+          entering={FadeInDown.delay(400).duration(350)}
+        >
+          <WeeklyMinutes minutes={45} />
+        </Animated.View>
 
-        <DailyChallenges
-          challenges={challenges}
-          onStartChallenge={handleStartChallenge}
-        />
+       
+        <Animated.View
+          entering={FadeInDown.delay(500).duration(350)}
+        >
+          <DailyChallenges
+            challenges={challenges}
+            onStartChallenge={handleStartChallenge}
+          />
+        </Animated.View>
       </ScrollView>
     </SafeAreaView>
   );
