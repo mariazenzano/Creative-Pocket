@@ -13,7 +13,7 @@ import type { Lesson } from "@/components/home/LessonCard";
 import LessonCarousel from "@/components/home/LessonCarousel";
 import StreakCalendar from "@/components/home/StreakCalendar";
 import WeeklyMinutes from "@/components/home/WeeklyMinutes";
-import BackgroundGlow from "../../components/BackgroundGlow";
+import BackgroundGlow from "../../components/home/BackgroundGlow";
 import GreetingSection from "../../components/home/GreetingSection";
 
 // Sample lessons

@@ -3,7 +3,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { palette } from "@/constants/colors";
 
-import BackgroundGlow from "@/components/BackgroundGlow";
+import BackgroundGlow from "@/components/home/BackgroundGlow";
 import NotifyCard from "@/components/NotifyReminderCard";
 
 export default function NotificationsScreen() {
