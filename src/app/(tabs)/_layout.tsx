@@ -6,11 +6,11 @@ export default function TabsLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: "#6200EE", // Color morado estándar de prueba
-        tabBarInactiveTintColor: "#757575", // Gris estándar de prueba
+        tabBarActiveTintColor: "#BAABFF",
+        tabBarInactiveTintColor: "#8E849D",
         tabBarStyle: {
-          backgroundColor: "#FFFFFF", // Fondo blanco estándar de prueba
-          borderTopColor: "#E0E0E0",
+          backgroundColor: "#000000",
+          borderTopColor: "#211B2B",
         },
       }}
     >
@@ -50,6 +50,7 @@ export default function TabsLayout() {
           ),
         }}
       />
+      <Tabs.Screen name="notificaciones" options={{ href: null }} />
     </Tabs>
   );
 }
