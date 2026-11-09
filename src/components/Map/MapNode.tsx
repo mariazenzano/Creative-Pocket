@@ -1,5 +1,5 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { Pressable, StyleSheet, Text } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import type { MapNode as MapNodeData, MapNodeStatus } from "../../types/map";
 
@@ -64,11 +64,7 @@ export default function MapNode({ node, status, onPress }: MapNodeProps) {
         {node.title}
       </Text>
 
-      <Pressable
-        style={[styles.nodeCircle, { backgroundColor: nodeColor }]}
-        disabled={isLocked}
-        onPress={() => onPress(node.id)}
-      >
+      <View style={[styles.nodeCircle, { backgroundColor: nodeColor }]}>
         <Ionicons
           name={getNodeIcon(node.type) as keyof typeof Ionicons.glyphMap}
           size={28}
@@ -81,7 +77,7 @@ export default function MapNode({ node, status, onPress }: MapNodeProps) {
           color="#FFFFFF"
           style={styles.statusIcon}
         />
-      </Pressable>
+      </View>
     </Pressable>
   );
 }
