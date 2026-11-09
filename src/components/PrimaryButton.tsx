@@ -2,7 +2,7 @@ import { Pressable, StyleSheet, Text } from "react-native";
 import { palette } from "../constants/colors";
 import { theme } from "../constants/theme";
 type Props = { label: string; onPress: () => void };
-export default function BotonPrimario({ label, onPress }: Props) {
+export default function PrimaryButton({ label, onPress }: Props) {
   return (
     <Pressable
       onPress={onPress}

@@ -1,7 +1,7 @@
 import { theme } from "@/constants/theme";
 import { StyleSheet, View } from "react-native";
 
-export default function Puntos() {
+export default function PaginationDots() {
   return (
     <View style={styles.contenedor}>
       <View style={styles.destacado} />

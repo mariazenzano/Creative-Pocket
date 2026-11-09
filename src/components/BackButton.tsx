@@ -6,7 +6,7 @@ import { LuCircleArrowLeft } from "react-icons/lu";
 
 type Props = { onPress: () => void };
 
-export default function HeroFlecha({ onPress }: Props) {
+export default function BackButton({ onPress }: Props) {
   return (
     <View style={styles.contenedor}>
       <Pressable

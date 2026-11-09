@@ -2,7 +2,7 @@ import { palette } from "@/constants/colors";
 import { StyleSheet, Text, View } from "react-native";
 import { theme } from "../constants/theme";
 
-export default function SeccionHero() {
+export default function OnboardingHero() {
   return (
     <View style={styles.contenedor}>
       <Text style={styles.titulo}>

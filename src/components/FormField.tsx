@@ -11,7 +11,7 @@ type Props = {
   isPassword?: boolean;
 };
 
-export default function Formulario({
+export default function FormField({
   label,
   placeholder,
   value,

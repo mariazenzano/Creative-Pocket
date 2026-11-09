@@ -1,4 +1,4 @@
-import SeccionCards from "@/components/SeccionCards";
+import ActivityCardList from "@/components/ActivityCardList";
 import { palette } from "@/constants/colors";
 import { theme } from "@/constants/theme";
 import { useRouter } from "expo-router";
@@ -14,12 +14,12 @@ export default function Index() {
   return (
     <SafeAreaView style={styles.screen}>
       <View style={styles.container}>
-        <HeroFlecha onPress={() => router.back()} />
-        <SeccionHero />
-        <SeccionCards />
-        <Puntos />
+        <BackButton onPress={() => router.back()} />
+        <OnboardingHero />
+        <ActivityCardList />
+        <PaginationDots />
 
-        <BotonPrimario
+        <PrimaryButton
           label="Continuar"
           onPress={() => router.replace("/(tabs)")}
         />
@@ -29,14 +29,25 @@ export default function Index() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    alignItems: "center",
-    justifyContent: "center",
+  screen: {
+    flex: 1,
+    backgroundColor: palette.neutral[800],
   },
 
-  screen: {
+  scrollView: {
+    flex: 1,
+  },
+
+  scrollContent: {
+    flexGrow: 1,
     paddingHorizontal: theme.spacing.xxl,
     paddingVertical: theme.spacing.sm,
-    backgroundColor: palette.neutral[800],
+  },
+
+  container: {
+    flexGrow: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingBottom: theme.spacing.xl,
   },
 });

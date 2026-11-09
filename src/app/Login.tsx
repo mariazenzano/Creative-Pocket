@@ -2,11 +2,11 @@ import { palette } from "@/constants/colors";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
-import BotonOpciones from "../components/BotonOpciones";
-import BotonPrimario from "../components/BotonPrimario";
-import EncabezadoLogin from "../components/EncabezadoLogin";
-import Enlace from "../components/Enlace";
-import Formulario from "../components/Formulario";
+import SocialButton from "../components/SocialButton";
+import PrimaryButton from "../components/PrimaryButton";
+import LoginHeader from "../components/LoginHeader";
+import InlineLink from "../components/InlineLink";
+import FormField from "../components/FormField";
 import { theme } from "../constants/theme";
 import { loadUser, saveUser } from "../storage/user";
 
@@ -15,10 +15,10 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [isRegistering, setIsRegistering] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
+
   const router = useRouter();
 
-  // Register user
-
+  // Register a new user
   const handleRegister = async () => {
     if (!username.trim() || !password || !confirmPassword) {
       Alert.alert("Campos incompletos", "Completa todos los campos.");
@@ -35,11 +35,15 @@ export default function Login() {
         name: username.trim(),
       });
 
-      const savedUser = await loadUser();
+      // Return to the login form.
+      setIsRegistering(false);
+      setPassword("");
+      setConfirmPassword("");
 
-      console.log("Usuario guardado:", savedUser);
-
-      router.replace("/unboarding");
+      Alert.alert(
+        "¡Cuenta creada!",
+        "Tu cuenta se guardó correctamente. Ahora puedes iniciar sesión.",
+      );
     } catch (error) {
       Alert.alert(
         "Error",
@@ -49,6 +53,8 @@ export default function Login() {
       console.error("Error saving user:", error);
     }
   };
+
+  // Login an existing user
   const handleLogin = async () => {
     if (!username.trim() || !password) {
       Alert.alert("Campos incompletos", "Completa tus datos.");
@@ -68,10 +74,12 @@ export default function Login() {
         return;
       }
 
+      // Navigate to the main index screen.
       router.replace("/(tabs)");
     } catch (error) {
       Alert.alert("Error", "No pudimos recuperar tus datos.");
-      console.error(error);
+
+      console.error("Login error:", error);
     }
   };
 
@@ -79,18 +87,19 @@ export default function Login() {
     <ScrollView
       contentContainerStyle={styles.container}
       keyboardShouldPersistTaps="handled"
+      showsVerticalScrollIndicator={false}
     >
-      <EncabezadoLogin />
+      <LoginHeader />
 
       <View style={styles.form}>
-        <Formulario
+        <FormField
           label={isRegistering ? "Nombre" : "Usuario"}
           placeholder={isRegistering ? "Tu nombre" : "Nombre de usuario"}
           value={username}
           onChangeText={setUsername}
         />
 
-        <Formulario
+        <FormField
           label="Contraseña"
           placeholder="Contraseña"
           value={password}
@@ -99,7 +108,7 @@ export default function Login() {
         />
 
         {isRegistering && (
-          <Formulario
+          <FormField
             label="Confirmar contraseña"
             placeholder="Repite tu contraseña"
             value={confirmPassword}
@@ -109,16 +118,17 @@ export default function Login() {
         )}
       </View>
 
-      <Enlace
+      <InlineLink
         text={isRegistering ? "¿Ya tienes cuenta?" : "¿No tienes cuenta?"}
         linkLabel={isRegistering ? "Inicia sesión" : "Regístrate"}
         onPress={() => {
           setIsRegistering(!isRegistering);
+          setPassword("");
           setConfirmPassword("");
         }}
       />
 
-      <BotonPrimario
+      <PrimaryButton
         label={isRegistering ? "Crear cuenta" : "Iniciar sesión"}
         onPress={() => {
           if (isRegistering) {
@@ -134,19 +144,19 @@ export default function Login() {
           <Text style={styles.or}>Or</Text>
 
           <View style={styles.social}>
-            <BotonOpciones
+            <SocialButton
               label="Login with Email"
               icon="logo-instagram"
               onPress={() => {}}
             />
 
-            <BotonOpciones
+            <SocialButton
               label="Login with Google"
               icon="logo-google"
               onPress={() => {}}
             />
 
-            <BotonOpciones
+            <SocialButton
               label="Login with Apple"
               icon="logo-apple"
               onPress={() => {}}
@@ -167,12 +177,15 @@ const styles = StyleSheet.create({
     paddingVertical: theme.spacing.sm,
     backgroundColor: palette.neutral[800],
   },
+
   form: {
     gap: theme.spacing.lg,
   },
+
   social: {
     gap: theme.spacing.md,
   },
+
   or: {
     textAlign: "center",
     fontSize: theme.text.body,
