@@ -1,16 +1,24 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useLocalSearchParams, useRouter, type Href } from "expo-router";
-import { theme } from "../../constants/theme";
 
+import {
+  useFocusEffect,
+  useLocalSearchParams,
+  useRouter,
+  type Href,
+} from "expo-router";
+
+import { theme } from "../../constants/theme";
 import { mapConnections, mapNodes } from "../../data/mapNodes";
 import { regions } from "../../data/regions";
 
 import type { MapNode } from "../../types/map";
 
 import { getNodeStatus, getRegionStatus } from "../../utils/mapProgress";
+
+import { getCompletedNodeIds } from "../../storage/mapProgress";
 
 import ChallengeCard from "../../components/Map/ChallengeCard";
 import RegionMap from "../../components/Map/RegionMap";
@@ -24,12 +32,33 @@ export default function RegionScreen() {
   // Buscamos la región correspondiente
   const region = regions.find((item) => item.id === regionId);
 
-  // Progreso de prueba del usuario
-  const [completedNodeIds] = useState<string[]>([]);
+  // Estados del progreso
+  const [completedNodeIds, setCompletedNodeIds] = useState<string[]>([]);
   const [completedRegionIds] = useState<string[]>([]);
 
   // Actividad seleccionada
   const [selectedNode, setSelectedNode] = useState<MapNode | null>(null);
+
+  // Recuperamos el progreso guardado cada vez que volvemos a esta pantalla
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+
+      const loadProgress = async () => {
+        const savedNodes = await getCompletedNodeIds();
+
+        if (isActive) {
+          setCompletedNodeIds(savedNodes);
+        }
+      };
+
+      loadProgress();
+
+      return () => {
+        isActive = false;
+      };
+    }, []),
+  );
 
   // Si no encontramos la región, mostramos un mensaje
   if (!region) {
@@ -74,12 +103,10 @@ export default function RegionScreen() {
     }
   };
 
-  // Acción temporal para comenzar una actividad
+  // Cerramos el modal y navegamos a la actividad
   const handleStartActivity = (nodeId: string) => {
-    // Cerramos el modal
     setSelectedNode(null);
 
-    // Navegamos a la actividad
     router.push(`/actividad/${nodeId}` as Href);
   };
 

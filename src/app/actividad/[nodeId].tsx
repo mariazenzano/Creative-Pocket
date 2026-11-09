@@ -1,6 +1,8 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useState } from "react";
+import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { completeNode } from "../../storage/mapProgress";
 
 import { theme } from "../../constants/theme";
 import { mapNodes } from "../../data/mapNodes";
@@ -22,6 +24,7 @@ function getActivityLabel(type: MapNode["type"]): string {
 }
 
 export default function ActivityScreen() {
+  const [isSaving, setIsSaving] = useState(false);
   const router = useRouter();
 
   // Recuperamos el identificador que viene en la URL.
@@ -41,7 +44,22 @@ export default function ActivityScreen() {
       </View>
     );
   }
+  const handleCompleteActivity = async () => {
+    try {
+      setIsSaving(true);
 
+      await completeNode(activity.id);
+
+      router.back();
+    } catch (error) {
+      Alert.alert(
+        "No se pudo guardar",
+        "Intenta completar la actividad nuevamente.",
+      );
+    } finally {
+      setIsSaving(false);
+    }
+  };
   return (
     <ScrollView
       style={styles.screen}
@@ -68,6 +86,11 @@ export default function ActivityScreen() {
           size={24}
           color={theme.colors.secondary}
         />
+        <Pressable
+          style={[styles.completeButton, { opacity: isSaving ? 0.6 : 1 }]}
+          onPress={handleCompleteActivity}
+          disabled={isSaving}
+        ></Pressable>
 
         <Text style={styles.infoText}>
           Aquí encontrarás el contenido y los ejercicios necesarios para
@@ -154,6 +177,19 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "#FFFFFF",
+    fontWeight: "bold",
+  },
+  completeButton: {
+    backgroundColor: theme.colors.primary,
+    padding: theme.spacing.md,
+    borderRadius: theme.radius.lg,
+    alignItems: "center",
+    marginTop: theme.spacing.xl,
+  },
+
+  completeButtonText: {
+    color: "#FFFFFF",
+    fontSize: theme.text.heading,
     fontWeight: "bold",
   },
 });

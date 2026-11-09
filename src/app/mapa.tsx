@@ -1,22 +1,46 @@
-import { useRouter, type Href } from "expo-router";
-import { useState } from "react";
+import { useFocusEffect, useRouter, type Href } from "expo-router";
+import { useCallback, useState } from "react";
+
 import { ScrollView, StyleSheet, View } from "react-native";
-import { theme } from "../constants/theme";
 
 import MapHeader from "../components/Map/MapHeader";
 import WorldMap from "../components/Map/WorldMap";
+import { theme } from "../constants/theme";
 
 import { mapNodes } from "../data/mapNodes";
 import { regions } from "../data/regions";
 
+import { getCompletedNodeIds } from "../storage/mapProgress";
+
 export default function MapScreen() {
   const router = useRouter();
 
-  // Actividades completadas de prueba
-  const [completedNodeIds] = useState<string[]>([]);
+  // Actividades completadas
+  const [completedNodeIds, setCompletedNodeIds] = useState<string[]>([]);
 
-  // Regiones completadas de prueba
+  // Regiones completadas
   const [completedRegionIds] = useState<string[]>([]);
+
+  // Actualizamos el progreso al entrar o regresar al mapa
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+
+      const loadProgress = async () => {
+        const savedNodes = await getCompletedNodeIds();
+
+        if (isActive) {
+          setCompletedNodeIds(savedNodes);
+        }
+      };
+
+      loadProgress();
+
+      return () => {
+        isActive = false;
+      };
+    }, []),
+  );
 
   // Calculamos el total de actividades
   const totalCount = mapNodes.length;
