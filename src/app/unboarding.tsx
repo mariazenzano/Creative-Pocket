@@ -8,8 +8,9 @@ import BotonPrimario from "../components/BotonPrimario";
 import HeroFlecha from "../components/HeroFlecha";
 import Puntos from "../components/Puntos";
 import SeccionHero from "../components/SeccionHero";
-const router = useRouter();
 export default function Index() {
+  const router = useRouter();
+
   return (
     <SafeAreaView style={styles.screen}>
       <View style={styles.container}>

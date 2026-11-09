@@ -1,11 +1,9 @@
 import { palette } from "@/constants/colors";
 import { theme } from "@/constants/theme";
-import { useRouter } from "expo-router";
 import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Index() {
-  const router = useRouter();
   return <SafeAreaView style={styles.screen}>
 
 
