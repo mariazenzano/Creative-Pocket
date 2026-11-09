@@ -54,3 +54,5 @@ export type MapConnection = {
   from: string;
   to: string;
 };
+// Posibles estados de una región
+export type RegionStatus = "locked" | "available" | "completed";
