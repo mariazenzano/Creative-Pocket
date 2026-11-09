@@ -3,7 +3,7 @@ import { theme } from "../constants/theme";
 
 type Props = { text: string; linkLabel: string; onPress: () => void };
 
-export default function Enlace({ text, linkLabel, onPress }: Props) {
+export default function InlineLink({ text, linkLabel, onPress }: Props) {
   return (
     <View style={styles.row}>
       <Text style={styles.text}>{text}</Text>
