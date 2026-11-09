@@ -1,4 +1,4 @@
-import type { Region } from "../../types/map";
+import type { Region } from "../types/map";
 
 // Información de las islas que forman nuestro mundo
 export const regions: Region[] = [

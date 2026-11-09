@@ -1,4 +1,4 @@
-import type { MapConnection, MapNode } from "../../types/map";
+import type { MapConnection, MapNode } from "../types/map";
 
 // Actividades que encontraremos dentro de las regiones
 export const mapNodes: MapNode[] = [
