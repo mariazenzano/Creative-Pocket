@@ -4,11 +4,10 @@ import { theme } from "@/constants/theme";
 import { useRouter } from "expo-router";
 import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import PrimaryButton from "../components/PrimaryButton";
-import BackButton from "../components/BackButton";
-import PaginationDots from "../components/PaginationDots";
-import OnboardingHero from "../components/OnboardingHero";
-const router = useRouter();
+import BotonPrimario from "../components/BotonPrimario";
+import HeroFlecha from "../components/HeroFlecha";
+import Puntos from "../components/Puntos";
+import SeccionHero from "../components/SeccionHero";
 export default function Index() {
   const router = useRouter();
 

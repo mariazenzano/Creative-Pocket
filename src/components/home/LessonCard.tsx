@@ -1,8 +1,8 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, {
   useAnimatedStyle,
-  useSharedValue,
   withSpring,
 } from "react-native-reanimated";
 export type Lesson = {
@@ -19,20 +19,21 @@ type LessonCardProps = {
 };
 
 export default function LessonCard({ lesson, onContinue }: LessonCardProps) {
-  const scale = useSharedValue(1);
+  const [isPressed, setIsPressed] = useState(false);
 
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
+    transform: [{ scale: withSpring(isPressed ? 0.96 : 1) }],
   }));
   return (
     <Animated.View
       style={[styles.card, animatedStyle]}
       onTouchStart={() => {
-        scale.value = withSpring(0.96);
+        setIsPressed(true);
       }}
       onTouchEnd={() => {
-        scale.value = withSpring(1);
+        setIsPressed(false);
       }}
+      onTouchCancel={() => setIsPressed(false)}
     >
       <View style={styles.content}>
         <View style={styles.information}>
