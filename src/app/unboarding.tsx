@@ -1,42 +1,30 @@
-import { useRouter } from "expo-router";
-import { ScrollView, StyleSheet, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-
-import SeccionCards from "@/components/SeccionCards";
+import ActivityCardList from "@/components/ActivityCardList";
 import { palette } from "@/constants/colors";
 import { theme } from "@/constants/theme";
-
-import BotonPrimario from "../components/BotonPrimario";
-import HeroFlecha from "../components/HeroFlecha";
-import Puntos from "../components/Puntos";
-import SeccionHero from "../components/SeccionHero";
-
+import { useRouter } from "expo-router";
+import { StyleSheet, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import PrimaryButton from "../components/PrimaryButton";
+import BackButton from "../components/BackButton";
+import PaginationDots from "../components/PaginationDots";
+import OnboardingHero from "../components/OnboardingHero";
+const router = useRouter();
 export default function Index() {
   const router = useRouter();
 
   return (
     <SafeAreaView style={styles.screen}>
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-        bounces={true}
-      >
-        <View style={styles.container}>
-          <HeroFlecha onPress={() => router.back()} />
+      <View style={styles.container}>
+        <BackButton onPress={() => router.back()} />
+        <OnboardingHero />
+        <ActivityCardList />
+        <PaginationDots />
 
-          <SeccionHero />
-
-          <SeccionCards />
-
-          <Puntos />
-
-          <BotonPrimario
-            label="Continuar"
-            onPress={() => router.replace("/(tabs)")}
-          />
-        </View>
-      </ScrollView>
+        <PrimaryButton
+          label="Continuar"
+          onPress={() => router.replace("/(tabs)")}
+        />
+      </View>
     </SafeAreaView>
   );
 }

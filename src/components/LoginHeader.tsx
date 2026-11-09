@@ -1,7 +1,7 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 import { theme } from "../constants/theme";
 
-export default function EncabezadoLogin() {
+export default function LoginHeader() {
   return (
     <View style={styles.container}>
       <Image

@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from "react";
 import { Alert, ScrollView, StyleSheet } from "react-native";
+import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 
@@ -68,6 +69,7 @@ const challenges: Challenge[] = [
 ];
 
 export default function Index() {
+  const router = useRouter();
   const [userName, setUserName] = useState("creativo");
 
   
@@ -110,9 +112,7 @@ export default function Index() {
           entering={FadeInDown.delay(0).duration(350)}
         >
           <HomeHeader
-            onNotificationsPress={() =>
-              Alert.alert("Notificaciones", "Próximamente")
-            }
+            onNotificationsPress={() => router.push("/notificaciones")}
             onProfilePress={() => Alert.alert("Perfil", "Próximamente")}
           />
         </Animated.View>
