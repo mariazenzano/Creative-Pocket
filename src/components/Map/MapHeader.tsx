@@ -1,7 +1,6 @@
-
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
-import { StyleSheet, Text, View, Pressable } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { theme } from "../../constants/theme";
 
@@ -18,53 +17,40 @@ export default function MapHeader({
 
   // Calculamos el porcentaje de progreso
   const progress =
-    totalCount > 0
-      ? Math.round((completedCount / totalCount) * 100)
-      : 0;
+    totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
 
   return (
     <View style={styles.container}>
-
       {/* Fila superior: botón de regreso y título */}
       <View style={styles.topRow}>
         <Pressable
           style={styles.backButton}
-          onPress={() => router.back()}
+          onPress={() => {
+            if (router.canGoBack()) {
+              router.back();
+            } else {
+              router.replace("/(tabs)/cursos");
+            }
+          }}
         >
-          <Ionicons
-            name="arrow-back"
-            size={24}
-            color={theme.colors.text}
-          />
+          <Ionicons name="arrow-back" size={24} color={theme.colors.text} />
         </Pressable>
 
-        <Text style={styles.title}>
-          Mapa de aprendizaje
-        </Text>
+        <Text style={styles.title}>Mapa de aprendizaje</Text>
       </View>
 
       {/* Indicador de progreso */}
       <View style={styles.progressContainer}>
         <View style={styles.progressInfo}>
-          <Text style={styles.progressLabel}>
-            Tu progreso
-          </Text>
+          <Text style={styles.progressLabel}>Tu progreso</Text>
 
-          <Text style={styles.progressPercentage}>
-            {progress}%
-          </Text>
+          <Text style={styles.progressPercentage}>{progress}%</Text>
         </View>
 
         <View style={styles.progressBackground}>
-          <View
-            style={[
-              styles.progressFill,
-              { width: `${progress}%` },
-            ]}
-          />
+          <View style={[styles.progressFill, { width: `${progress}%` }]} />
         </View>
       </View>
-
     </View>
   );
 }

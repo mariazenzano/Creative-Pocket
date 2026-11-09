@@ -1,16 +1,8 @@
 import { useState } from "react";
-import {
-  Alert,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useLocalSearchParams, useRouter } from "expo-router";
-
+import { useLocalSearchParams, useRouter, type Href } from "expo-router";
 import { theme } from "../../constants/theme";
 
 import { mapConnections, mapNodes } from "../../data/mapNodes";
@@ -84,10 +76,11 @@ export default function RegionScreen() {
 
   // Acción temporal para comenzar una actividad
   const handleStartActivity = (nodeId: string) => {
-    Alert.alert(
-      "¡Próximamente!",
-      `La actividad ${nodeId} estará disponible cuando construyamos las pantallas de aprendizaje.`,
-    );
+    // Cerramos el modal
+    setSelectedNode(null);
+
+    // Navegamos a la actividad
+    router.push(`/actividad/${nodeId}` as Href);
   };
 
   return (
