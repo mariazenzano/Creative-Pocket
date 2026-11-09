@@ -2,16 +2,62 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { theme } from "../../constants/theme";
-import type { Region, RegionId, RegionStatus } from "../../types/map";
+import type { Region, RegionStatus } from "../../types/map";
 
-// Información que recibirá nuestra isla
+import IslandNature from "./IslandNature";
+
 type IslandProps = {
   region: Region;
   status: RegionStatus;
   completedCount: number;
   totalCount: number;
-  onPress: (regionId: RegionId) => void;
+  onPress: (regionId: Region["id"]) => void;
 };
+
+const islandDecorations: Record<
+  Region["id"],
+  {
+    first: keyof typeof Ionicons.glyphMap;
+    second: keyof typeof Ionicons.glyphMap;
+    third: keyof typeof Ionicons.glyphMap;
+  }
+> = {
+  "graphic-design": {
+    first: "color-palette-outline",
+    second: "pencil-outline",
+    third: "shapes-outline",
+  },
+  "web-design": {
+    first: "code-slash-outline",
+    second: "desktop-outline",
+    third: "grid-outline",
+  },
+  audiovisual: {
+    first: "camera-outline",
+    second: "film-outline",
+    third: "videocam-outline",
+  },
+  "3d-design": {
+    first: "cube-outline",
+    second: "layers-outline",
+    third: "shapes-outline",
+  },
+};
+
+function getNatureVariant(
+  regionId: Region["id"],
+): "graphic" | "web" | "audiovisual" | "3d" {
+  switch (regionId) {
+    case "graphic-design":
+      return "graphic";
+    case "web-design":
+      return "web";
+    case "audiovisual":
+      return "audiovisual";
+    case "3d-design":
+      return "3d";
+  }
+}
 
 export default function Island({
   region,
@@ -20,104 +66,183 @@ export default function Island({
   totalCount,
   onPress,
 }: IslandProps) {
-  // Comprobamos si la isla está bloqueada
   const isLocked = status === "locked";
   const isCompleted = status === "completed";
 
-  // Calculamos el porcentaje de progreso
-  const progressPercentage =
-    totalCount > 0
-      ? Math.min(100, Math.max(0, (completedCount / totalCount) * 100))
-      : 0;
+  const progress =
+    totalCount > 0 ? Math.min((completedCount / totalCount) * 100, 100) : 0;
 
-  // Elegimos el icono según el estado
-  const statusIcon =
-    status === "locked"
-      ? "lock-closed"
-      : isCompleted
-        ? "checkmark-circle"
-        : "arrow-forward-circle";
+  const decorations = islandDecorations[region.id];
+
+  const regionName = region.title.replace("Isla del ", "").replace("Isla ", "");
+
+  const statusIcon = isLocked
+    ? "lock-closed"
+    : isCompleted
+      ? "checkmark"
+      : "play";
+
+  const statusLabel = isLocked
+    ? "Bloqueada"
+    : isCompleted
+      ? "Completada"
+      : "Explorar";
+
+  const statusColor = isLocked
+    ? theme.colors.border
+    : isCompleted
+      ? theme.colors.secondary
+      : theme.colors.primary;
+
+  const handlePress = () => {
+    if (!isLocked) {
+      onPress(region.id);
+    }
+  };
 
   return (
     <Pressable
-      style={[
-        styles.container,
-        {
-          borderColor: region.accentColor,
-          borderWidth: isCompleted ? 2.5 : 1.5,
-          opacity: isLocked ? 0.55 : 1,
-          backgroundColor: isCompleted
-            ? `${region.accentColor}18`
-            : theme.colors.card,
-        },
-      ]}
+      onPress={handlePress}
       disabled={isLocked}
-      onPress={() => onPress(region.id)}
+      accessibilityRole="button"
+      accessibilityState={{ disabled: isLocked }}
+      accessibilityLabel={`${region.title}. ${statusLabel}. ${completedCount} de ${totalCount} actividades completadas.`}
+      style={({ pressed }) => [
+        styles.container,
+        pressed && styles.pressed,
+        isLocked && styles.locked,
+      ]}
     >
-      {/* Círculo que representa la isla */}
+      {/* Floating shadow */}
+      <View style={styles.groundShadow} />
+
+      {/* Natural environment */}
+      <IslandNature
+        accentColor={region.accentColor}
+        variant={getNatureVariant(region.id)}
+      />
+
+      {/* Lower island terrain */}
       <View
         style={[
-          styles.island,
-          {
-            backgroundColor: region.accentColor,
-            transform: [{ scale: isCompleted ? 1.08 : 1 }],
-          },
+          styles.islandBaseShadow,
+          { backgroundColor: region.accentColor },
         ]}
-      >
-        <Ionicons
-          name={region.iconName as keyof typeof Ionicons.glyphMap}
-          size={36}
-          color="#FFFFFF"
+      />
+
+      <View
+        style={[styles.islandBase, { backgroundColor: region.accentColor }]}
+      />
+
+      {/* Upper island platform */}
+      <View style={[styles.islandSurface, { borderColor: region.accentColor }]}>
+        {/* Surface decoration */}
+        <View
+          style={[styles.surfaceGlow, { backgroundColor: region.accentColor }]}
         />
-      </View>
 
-      {/* Nombre de la región */}
-      <Text style={styles.title}>{region.title}</Text>
-
-      {/* Estado de la región */}
-      <View style={styles.statusContainer}>
-        <Ionicons name={statusIcon} size={15} color={region.accentColor} />
-
-        <Text style={styles.statusText}>
-          {isLocked ? "Bloqueada" : isCompleted ? "Completada" : "Explorar"}
-        </Text>
-      </View>
-
-      {/* Progreso de actividades */}
-      <View style={styles.progressContainer}>
-        <View style={styles.progressInfo}>
-          <Text style={styles.progressLabel}>Progreso</Text>
-
-          <Text style={styles.progressCount}>
-            {completedCount}/{totalCount}
-          </Text>
-        </View>
-
-        <View style={styles.progressTrack}>
-          <View
-            style={[
-              styles.progressFill,
-              {
-                width: `${progressPercentage}%`,
-                backgroundColor: region.accentColor,
-              },
-            ]}
+        {/* Decorative icons */}
+        <View style={styles.decorationLeft}>
+          <Ionicons
+            name={decorations.first}
+            size={22}
+            color={region.accentColor}
           />
         </View>
-      </View>
 
-      {/* Indicador adicional de especialidad completada */}
-      {isCompleted && (
+        <View style={styles.decorationRight}>
+          <Ionicons
+            name={decorations.second}
+            size={21}
+            color={region.accentColor}
+          />
+        </View>
+
+        <View style={styles.decorationBottom}>
+          <Ionicons
+            name={decorations.third}
+            size={18}
+            color={region.accentColor}
+          />
+        </View>
+
+        {/* Light details */}
         <View
           style={[
-            styles.completedBadge,
+            styles.lightDot,
+            styles.lightDotLeft,
+            { backgroundColor: region.accentColor },
+          ]}
+        />
+
+        <View
+          style={[
+            styles.lightDot,
+            styles.lightDotRight,
+            { backgroundColor: region.accentColor },
+          ]}
+        />
+
+        {/* Main icon platform */}
+        <View
+          style={[
+            styles.iconPlatformShadow,
             { backgroundColor: region.accentColor },
           ]}
         >
-          <Ionicons name="trophy" size={12} color="#FFFFFF" />
-          <Text style={styles.completedBadgeText}>¡Lograda!</Text>
+          <View
+            style={[styles.iconPlatform, { borderColor: region.accentColor }]}
+          >
+            <Ionicons
+              name={region.iconName as keyof typeof Ionicons.glyphMap}
+              size={38}
+              color={region.accentColor}
+            />
+          </View>
         </View>
-      )}
+
+        {/* Region status */}
+        <View style={[styles.statusBadge, { backgroundColor: statusColor }]}>
+          <Ionicons name={statusIcon} size={13} color={theme.colors.text} />
+        </View>
+      </View>
+
+      {/* Region information */}
+      <View style={styles.information}>
+        <Text style={styles.regionTitle} numberOfLines={2}>
+          {regionName}
+        </Text>
+
+        <Text
+          style={[
+            styles.statusText,
+            {
+              color: isLocked ? theme.colors.textMuted : region.accentColor,
+            },
+          ]}
+        >
+          {statusLabel}
+        </Text>
+
+        {/* Progress indicator */}
+        <View style={styles.progressContainer}>
+          <View style={styles.progressBackground}>
+            <View
+              style={[
+                styles.progressFill,
+                {
+                  width: `${progress}%`,
+                  backgroundColor: region.accentColor,
+                },
+              ]}
+            />
+          </View>
+
+          <Text style={styles.progressText}>
+            {completedCount}/{totalCount}
+          </Text>
+        </View>
+      </View>
     </Pressable>
   );
 }
@@ -125,89 +250,197 @@ export default function Island({
 const styles = StyleSheet.create({
   container: {
     width: 150,
-    minHeight: 175,
-    borderRadius: theme.radius.lg,
-    borderWidth: 1.5,
+    minHeight: 205,
+    alignItems: "center",
+    paddingBottom: 8,
+  },
+
+  pressed: {
+    transform: [{ scale: 0.96 }, { translateY: 3 }],
+  },
+
+  locked: {
+    opacity: 0.58,
+  },
+
+  groundShadow: {
+    position: "absolute",
+    top: 120,
+    width: 126,
+    height: 25,
+    borderRadius: 70,
+    backgroundColor: "#000000",
+    opacity: 0.2,
+  },
+
+  islandBaseShadow: {
+    position: "absolute",
+    top: 42,
+    width: 132,
+    height: 91,
+    borderRadius: 42,
+    opacity: 0.55,
+    transform: [{ scaleX: 1.08 }, { translateY: 8 }],
+  },
+
+  islandBase: {
+    position: "absolute",
+    top: 31,
+    width: 132,
+    height: 96,
+    borderRadius: 45,
+    transform: [{ scaleX: 1.06 }],
+    opacity: 0.95,
+  },
+
+  islandSurface: {
+    position: "absolute",
+    top: 22,
+    width: 140,
+    height: 112,
+    borderRadius: 48,
     backgroundColor: theme.colors.card,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: theme.spacing.md,
-    gap: theme.spacing.sm,
-  },
-
-  island: {
-    width: 76,
-    height: 76,
-    borderRadius: theme.radius.full,
+    borderWidth: 4,
     justifyContent: "center",
     alignItems: "center",
+    elevation: 12,
+    shadowColor: "#000000",
+    shadowOffset: {
+      width: 0,
+      height: 8,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 9,
   },
 
-  title: {
+  surfaceGlow: {
+    position: "absolute",
+    top: 5,
+    width: 75,
+    height: 5,
+    borderRadius: 5,
+    opacity: 0.12,
+  },
+
+  decorationLeft: {
+    position: "absolute",
+    left: 14,
+    top: 24,
+    opacity: 0.8,
+  },
+
+  decorationRight: {
+    position: "absolute",
+    right: 13,
+    top: 26,
+    opacity: 0.8,
+  },
+
+  decorationBottom: {
+    position: "absolute",
+    bottom: 12,
+    right: 31,
+    opacity: 0.75,
+  },
+
+  lightDot: {
+    position: "absolute",
+    width: 5,
+    height: 5,
+    borderRadius: 3,
+    opacity: 0.6,
+  },
+
+  lightDotLeft: {
+    left: 34,
+    bottom: 22,
+  },
+
+  lightDotRight: {
+    right: 31,
+    top: 17,
+  },
+
+  iconPlatformShadow: {
+    width: 83,
+    height: 83,
+    borderRadius: 42,
+    justifyContent: "center",
+    alignItems: "center",
+    opacity: 0.3,
+  },
+
+  iconPlatform: {
+    position: "absolute",
+    width: 75,
+    height: 75,
+    borderRadius: 38,
+    backgroundColor: theme.colors.background,
+    borderWidth: 3,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  statusBadge: {
+    position: "absolute",
+    top: -6,
+    right: 4,
+    width: 28,
+    height: 28,
+    borderRadius: 15,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 2,
+    borderColor: theme.colors.background,
+    elevation: 5,
+  },
+
+  information: {
+    width: "100%",
+    alignItems: "center",
+    marginTop: 137,
+  },
+
+  regionTitle: {
     color: theme.colors.text,
-    fontSize: theme.text.body,
-    fontWeight: "bold",
+    fontSize: 12,
+    fontWeight: "800",
     textAlign: "center",
-  },
-
-  statusContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 5,
+    maxWidth: 145,
   },
 
   statusText: {
-    color: theme.colors.textMuted,
-    fontSize: theme.text.small,
+    fontSize: 9,
+    fontWeight: "800",
+    textTransform: "uppercase",
+    letterSpacing: 0.8,
+    marginTop: 3,
   },
 
   progressContainer: {
-    width: "100%",
-    gap: 5,
-  },
-
-  progressInfo: {
+    width: 110,
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
+    gap: 6,
+    marginTop: 6,
   },
 
-  progressLabel: {
-    color: theme.colors.textMuted,
-    fontSize: 10,
-  },
-
-  progressCount: {
-    color: theme.colors.text,
-    fontSize: 10,
-    fontWeight: "bold",
-  },
-
-  progressTrack: {
+  progressBackground: {
+    flex: 1,
     height: 6,
-    width: "100%",
-    borderRadius: 10,
+    borderRadius: 5,
     backgroundColor: theme.colors.border,
     overflow: "hidden",
   },
 
   progressFill: {
     height: "100%",
-    borderRadius: 10,
+    borderRadius: 5,
   },
 
-  completedBadge: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
-    paddingHorizontal: 9,
-    paddingVertical: 4,
-    borderRadius: theme.radius.full,
-  },
-
-  completedBadgeText: {
-    color: "#FFFFFF",
+  progressText: {
+    color: theme.colors.textMuted,
     fontSize: 10,
-    fontWeight: "bold",
+    fontWeight: "700",
   },
 });

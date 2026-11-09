@@ -1,6 +1,5 @@
 import type { Region } from "../types/map";
 
-// Información de las islas que forman nuestro mundo
 export const regions: Region[] = [
   {
     id: "graphic-design",
@@ -10,8 +9,8 @@ export const regions: Region[] = [
     iconName: "color-palette-outline",
     accentColor: "#7557FF",
     position: {
-      x: 18,
-      y: 48,
+      x: 35,
+      y: 8,
     },
     unlockRule: {
       type: "open",
@@ -25,8 +24,8 @@ export const regions: Region[] = [
     iconName: "desktop-outline",
     accentColor: "#00B6FF",
     position: {
-      x: 68,
-      y: 25,
+      x: 65,
+      y: 35,
     },
     unlockRule: {
       type: "requires-regions",
@@ -41,8 +40,8 @@ export const regions: Region[] = [
     iconName: "videocam-outline",
     accentColor: "#FF9F43",
     position: {
-      x: 76,
-      y: 70,
+      x: 35,
+      y: 63,
     },
     unlockRule: {
       type: "open",
@@ -56,8 +55,8 @@ export const regions: Region[] = [
     iconName: "cube-outline",
     accentColor: "#FF5C9A",
     position: {
-      x: 28,
-      y: 85,
+      x: 65,
+      y: 90,
     },
     unlockRule: {
       type: "requires-regions",

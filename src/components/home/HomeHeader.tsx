@@ -1,39 +1,35 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { StyleSheet, TextInput, Pressable, View } from "react-native";
+import { useRouter } from "expo-router";
+import { Pressable, StyleSheet, TextInput, View } from "react-native";
 
 type HomeHeaderProps = {
   onNotificationsPress?: () => void;
-  onProfilePress?: () => void;
 };
 
-export default function HomeHeader({
-  onNotificationsPress,
-  onProfilePress,
-}: HomeHeaderProps) {
+export default function HomeHeader({ onNotificationsPress }: HomeHeaderProps) {
+  const router = useRouter();
+
+  const handleProfilePress = () => {
+    router.push("/profile");
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.searchContainer}>
         <Ionicons name="search-outline" size={20} color="#888888" />
 
-        <TextInput 
-        /*barra de busqueda*/
+        <TextInput
           style={styles.input}
           placeholder="Buscar cursos o lecciones..."
           placeholderTextColor="#888888"
         />
       </View>
 
-      <Pressable
-        style={styles.iconButton}
-        onPress={onNotificationsPress}
-      >
+      <Pressable style={styles.iconButton} onPress={onNotificationsPress}>
         <Ionicons name="notifications-outline" size={22} color="#FFFFFF" />
       </Pressable>
 
-      <Pressable
-        style={styles.profileButton}
-        onPress={onProfilePress}
-      >
+      <Pressable style={styles.profileButton} onPress={handleProfilePress}>
         <Ionicons name="person-outline" size={22} color="#FFFFFF" />
       </Pressable>
     </View>

@@ -14,7 +14,6 @@ import MapPath from "./MapPath";
 
 import { getNodeStatus, getRegionStatus } from "../../utils/mapProgress";
 
-// Información que recibirá el mapa de una región
 type RegionMapProps = {
   region: Region;
   nodes: MapNode[];
@@ -24,6 +23,11 @@ type RegionMapProps = {
   onNodePress: (nodeId: string) => void;
 };
 
+const MAP_HEIGHT = 950;
+const NODE_WIDTH = 125;
+const NODE_HEIGHT = 124;
+const NODE_CENTER_OFFSET = 28;
+
 export default function RegionMap({
   region,
   nodes,
@@ -32,16 +36,11 @@ export default function RegionMap({
   completedRegionIds,
   onNodePress,
 }: RegionMapProps) {
-  // Obtenemos el ancho disponible del dispositivo
   const { width } = useWindowDimensions();
 
-  // Evitamos que el mapa sea demasiado estrecho
+  // Keep the map responsive on smaller screens.
   const mapWidth = Math.max(width, 360);
 
-  // Altura del recorrido de aprendizaje
-  const mapHeight = 950;
-
-  // Calculamos el estado de la región
   const regionStatus: RegionStatus = getRegionStatus(
     region,
     completedRegionIds,
@@ -49,7 +48,7 @@ export default function RegionMap({
 
   return (
     <View style={styles.container}>
-      {/* Información de la especialidad */}
+      {/* Region heading */}
       <View style={styles.header}>
         <Text style={styles.title}>{region.title}</Text>
 
@@ -58,28 +57,33 @@ export default function RegionMap({
         <Text style={styles.subtitle}>Tu recorrido de aprendizaje</Text>
       </View>
 
-      {/* Lienzo donde aparecen los caminos y actividades */}
+      {/* Learning map */}
       <View
         style={[
           styles.mapContainer,
           {
             width: mapWidth,
-            height: mapHeight,
+            height: MAP_HEIGHT,
           },
         ]}
       >
-        {/* Dibujamos las conexiones entre actividades */}
+        {/* Trails stay behind the activity nodes */}
         <MapPath
           nodes={nodes}
           connections={connections}
           width={mapWidth}
-          height={mapHeight}
+          height={MAP_HEIGHT}
         />
 
-        {/* Recorremos las actividades de la región */}
+        {/* Learning activities */}
         {nodes.map((node) => {
-          // Calculamos el estado de cada actividad
           const status = getNodeStatus(node, completedNodeIds, regionStatus);
+
+          // Match the coordinates used by MapPath.
+          const positionX = (node.position.x / 100) * mapWidth;
+
+          const positionY =
+            (node.position.y / 100) * MAP_HEIGHT + NODE_CENTER_OFFSET;
 
           return (
             <View
@@ -87,8 +91,8 @@ export default function RegionMap({
               style={[
                 styles.nodePosition,
                 {
-                  left: `${node.position.x}%`,
-                  top: `${node.position.y}%`,
+                  left: positionX - NODE_WIDTH / 2,
+                  top: positionY - NODE_HEIGHT / 2,
                 },
               ]}
             >
@@ -140,10 +144,15 @@ const styles = StyleSheet.create({
   mapContainer: {
     position: "relative",
     alignSelf: "center",
+    overflow: "visible",
   },
 
   nodePosition: {
     position: "absolute",
-    transform: [{ translateX: -60 }, { translateY: -50 }],
+    width: NODE_WIDTH,
+    minHeight: NODE_HEIGHT,
+    alignItems: "center",
+    zIndex: 2,
+    elevation: 2,
   },
 });

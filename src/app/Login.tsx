@@ -2,11 +2,13 @@ import { palette } from "@/constants/colors";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
+
 import BotonOpciones from "../components/BotonOpciones";
 import BotonPrimario from "../components/BotonPrimario";
 import EncabezadoLogin from "../components/EncabezadoLogin";
 import Enlace from "../components/Enlace";
 import Formulario from "../components/Formulario";
+
 import { theme } from "../constants/theme";
 import { loadUser, saveUser } from "../storage/user";
 
@@ -15,10 +17,10 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [isRegistering, setIsRegistering] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
+
   const router = useRouter();
 
-  // Register user
-
+  // Register a new user
   const handleRegister = async () => {
     if (!username.trim() || !password || !confirmPassword) {
       Alert.alert("Campos incompletos", "Completa todos los campos.");
@@ -35,11 +37,15 @@ export default function Login() {
         name: username.trim(),
       });
 
-      const savedUser = await loadUser();
+      // Return to the login form.
+      setIsRegistering(false);
+      setPassword("");
+      setConfirmPassword("");
 
-      console.log("Usuario guardado:", savedUser);
-
-      router.replace("/unboarding");
+      Alert.alert(
+        "¡Cuenta creada!",
+        "Tu cuenta se guardó correctamente. Ahora puedes iniciar sesión.",
+      );
     } catch (error) {
       Alert.alert(
         "Error",
@@ -49,6 +55,8 @@ export default function Login() {
       console.error("Error saving user:", error);
     }
   };
+
+  // Login an existing user
   const handleLogin = async () => {
     if (!username.trim() || !password) {
       Alert.alert("Campos incompletos", "Completa tus datos.");
@@ -68,10 +76,12 @@ export default function Login() {
         return;
       }
 
+      // Navigate to the main index screen.
       router.replace("/(tabs)");
     } catch (error) {
       Alert.alert("Error", "No pudimos recuperar tus datos.");
-      console.error(error);
+
+      console.error("Login error:", error);
     }
   };
 
@@ -79,6 +89,7 @@ export default function Login() {
     <ScrollView
       contentContainerStyle={styles.container}
       keyboardShouldPersistTaps="handled"
+      showsVerticalScrollIndicator={false}
     >
       <EncabezadoLogin />
 
@@ -114,6 +125,7 @@ export default function Login() {
         linkLabel={isRegistering ? "Inicia sesión" : "Regístrate"}
         onPress={() => {
           setIsRegistering(!isRegistering);
+          setPassword("");
           setConfirmPassword("");
         }}
       />
@@ -167,12 +179,15 @@ const styles = StyleSheet.create({
     paddingVertical: theme.spacing.sm,
     backgroundColor: palette.neutral[800],
   },
+
   form: {
     gap: theme.spacing.lg,
   },
+
   social: {
     gap: theme.spacing.md,
   },
+
   or: {
     textAlign: "center",
     fontSize: theme.text.body,

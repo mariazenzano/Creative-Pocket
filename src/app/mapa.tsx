@@ -17,17 +17,14 @@ import { getCompletedRegionIds } from "../utils/mapProgress";
 export default function MapScreen() {
   const router = useRouter();
 
-  // Actividades completadas
   const [completedNodeIds, setCompletedNodeIds] = useState<string[]>([]);
 
-  // Calculamos las regiones completadas
   const completedRegionIds = getCompletedRegionIds(
     regions,
     mapNodes,
     completedNodeIds,
   );
 
-  // Actualizamos el progreso al entrar o regresar al mapa
   useFocusEffect(
     useCallback(() => {
       let isActive = true;
@@ -48,13 +45,9 @@ export default function MapScreen() {
     }, []),
   );
 
-  // Calculamos el total de actividades
   const totalCount = mapNodes.length;
-
-  // Calculamos cuántas actividades están completadas
   const completedCount = completedNodeIds.length;
 
-  // Abrimos la pantalla de una región
   const handleRegionPress = (regionId: RegionId) => {
     router.push({
       pathname: "/mapa/[regionId]",
@@ -66,16 +59,18 @@ export default function MapScreen() {
     <View style={styles.screen}>
       <MapHeader completedCount={completedCount} totalCount={totalCount} />
 
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <ScrollView showsVerticalScrollIndicator={false} nestedScrollEnabled>
-          <WorldMap
-            regions={regions}
-            nodes={mapNodes}
-            completedRegionIds={completedRegionIds}
-            completedNodeIds={completedNodeIds}
-            onRegionPress={handleRegionPress}
-          />
-        </ScrollView>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <WorldMap
+          regions={regions}
+          nodes={mapNodes}
+          completedRegionIds={completedRegionIds}
+          completedNodeIds={completedNodeIds}
+          onRegionPress={handleRegionPress}
+        />
       </ScrollView>
     </View>
   );
@@ -85,5 +80,13 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: theme.colors.background,
+  },
+
+  scrollView: {
+    flex: 1,
+  },
+
+  scrollContent: {
+    paddingBottom: 40,
   },
 });
