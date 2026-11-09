@@ -1,5 +1,5 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import { Pressable, StyleSheet, TextInput, View } from "react-native";
 
 type HomeHeaderProps = {
@@ -31,7 +31,7 @@ export default function HomeHeader({ onNotificationsPress }: HomeHeaderProps) {
 
       <Pressable
         style={styles.profileButton}
-        onPress={() => router.push("/perfil")}
+        onPress={handleProfilePress}
         accessibilityRole="button"
         accessibilityLabel="Abrir perfil"
       >
