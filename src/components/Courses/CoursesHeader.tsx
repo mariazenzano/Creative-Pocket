@@ -15,12 +15,12 @@ export default function CoursesHeader({
 
   return (
     <View style={styles.container}>
-      {/* Flecha que redirige atras, para los enrutamientos */}
+      {/* Flecha para regresar */}
       <Pressable style={styles.backButton} onPress={() => router.back()}>
         <Ionicons name="arrow-back" size={22} color="#FFFFFF" />
       </Pressable>
 
-      {/* Barra de busqueda */}
+      {/* Barra de búsqueda */}
       <View style={styles.searchContainer}>
         <Ionicons name="search-outline" size={20} color="#888888" />
 
@@ -32,14 +32,21 @@ export default function CoursesHeader({
       </View>
 
       {/* Notificaciones */}
-      <Pressable style={styles.iconButton} onPress={() => router.push("/Notifications")}>
+      <Pressable
+        style={styles.iconButton}
+        onPress={() => router.push("/Notifications")}
+        accessibilityRole="button"
+        accessibilityLabel="Abrir notificaciones"
+      >
         <Ionicons name="notifications-outline" size={22} color="#FFFFFF" />
       </Pressable>
 
       {/* Perfil de usuario */}
       <Pressable
         style={styles.profileButton}
-        onPress={() => router.push("/profile")}
+        onPress={() => router.push("/perfil")}
+        accessibilityRole="button"
+        accessibilityLabel="Abrir perfil"
       >
         <Ionicons name="person-outline" size={22} color="#FFFFFF" />
       </Pressable>
