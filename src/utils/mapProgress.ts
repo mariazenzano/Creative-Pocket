@@ -3,9 +3,9 @@ import type {
     MapNode,
     MapNodeStatus,
     Region,
+    RegionId,
     RegionStatus,
 } from "../types/map";
-
 // Determina si una región está bloqueada, disponible o completada
 export function getRegionStatus(
   region: Region,
@@ -29,6 +29,25 @@ export function getRegionStatus(
   return hasCompletedRequirements ? "available" : "locked";
 }
 
+// Obtener las regiones que el estudiante ya completó
+export function getCompletedRegionIds(
+  regions: Region[],
+  nodes: MapNode[],
+  completedNodeIds: string[],
+): RegionId[] {
+  return regions
+    .filter((region) => {
+      // Buscamos todas las actividades de la región
+      const regionNodes = nodes.filter((node) => node.regionId === region.id);
+
+      // La región debe tener actividades y todas deben estar completadas
+      return (
+        regionNodes.length > 0 &&
+        regionNodes.every((node) => completedNodeIds.includes(node.id))
+      );
+    })
+    .map((region) => region.id);
+}
 // Determina si una actividad está bloqueada, disponible o completada
 export function getNodeStatus(
   node: MapNode,

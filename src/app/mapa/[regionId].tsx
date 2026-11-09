@@ -2,13 +2,13 @@ import { useCallback, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import Ionicons from "@expo/vector-icons/Ionicons";
-
 import {
   useFocusEffect,
   useLocalSearchParams,
   useRouter,
   type Href,
 } from "expo-router";
+import { getCompletedRegionIds } from "../../utils/mapProgress";
 
 import { theme } from "../../constants/theme";
 import { mapConnections, mapNodes } from "../../data/mapNodes";
@@ -34,7 +34,11 @@ export default function RegionScreen() {
 
   // Estados del progreso
   const [completedNodeIds, setCompletedNodeIds] = useState<string[]>([]);
-  const [completedRegionIds] = useState<string[]>([]);
+  const completedRegionIds = getCompletedRegionIds(
+    regions,
+    mapNodes,
+    completedNodeIds,
+  );
 
   // Actividad seleccionada
   const [selectedNode, setSelectedNode] = useState<MapNode | null>(null);
@@ -66,8 +70,11 @@ export default function RegionScreen() {
       <View style={styles.errorContainer}>
         <Text style={styles.errorTitle}>Región no encontrada</Text>
 
-        <Pressable style={styles.backButton} onPress={() => router.back()}>
-          <Text style={styles.backButtonText}>Volver al mapa</Text>
+        <Pressable
+          style={styles.backButton}
+          onPress={() => router.replace("/mapa")}
+        >
+          <Ionicons name="arrow-back" size={24} color={theme.colors.text} />
         </Pressable>
       </View>
     );

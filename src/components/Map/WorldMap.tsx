@@ -1,12 +1,14 @@
 import { StyleSheet, View } from "react-native";
 
-import type { Region, RegionId, RegionStatus } from "../../types/map";
+import type { MapNode, Region, RegionId, RegionStatus } from "../../types/map";
 
 import Island from "./Island";
 
 type WorldMapProps = {
   regions: Region[];
+  nodes: MapNode[];
   completedRegionIds: string[];
+  completedNodeIds: string[];
   onRegionPress: (regionId: RegionId) => void;
 };
 
@@ -29,13 +31,27 @@ function getStatus(region: Region, completedRegionIds: string[]): RegionStatus {
 
 export default function WorldMap({
   regions,
+  nodes,
   completedRegionIds,
+  completedNodeIds,
   onRegionPress,
 }: WorldMapProps) {
   return (
     <View style={styles.container}>
       {regions.map((region) => {
+        // Calculamos el estado de la región
         const status = getStatus(region, completedRegionIds);
+
+        // Obtenemos todas las actividades de esta región
+        const regionNodes = nodes.filter((node) => node.regionId === region.id);
+
+        // Contamos las actividades completadas
+        const completedCount = regionNodes.filter((node) =>
+          completedNodeIds.includes(node.id),
+        ).length;
+
+        // Calculamos el total de actividades
+        const totalCount = regionNodes.length;
 
         return (
           <View
@@ -48,7 +64,13 @@ export default function WorldMap({
               },
             ]}
           >
-            <Island region={region} status={status} onPress={onRegionPress} />
+            <Island
+              region={region}
+              status={status}
+              completedCount={completedCount}
+              totalCount={totalCount}
+              onPress={onRegionPress}
+            />
           </View>
         );
       })}

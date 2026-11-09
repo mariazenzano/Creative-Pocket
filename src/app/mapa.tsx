@@ -1,16 +1,18 @@
-import { useFocusEffect, useRouter, type Href } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
-
 import { ScrollView, StyleSheet, View } from "react-native";
+
+import type { RegionId } from "../types/map";
 
 import MapHeader from "../components/Map/MapHeader";
 import WorldMap from "../components/Map/WorldMap";
-import { theme } from "../constants/theme";
 
+import { theme } from "../constants/theme";
 import { mapNodes } from "../data/mapNodes";
 import { regions } from "../data/regions";
 
 import { getCompletedNodeIds } from "../storage/mapProgress";
+import { getCompletedRegionIds } from "../utils/mapProgress";
 
 export default function MapScreen() {
   const router = useRouter();
@@ -18,8 +20,12 @@ export default function MapScreen() {
   // Actividades completadas
   const [completedNodeIds, setCompletedNodeIds] = useState<string[]>([]);
 
-  // Regiones completadas
-  const [completedRegionIds] = useState<string[]>([]);
+  // Calculamos las regiones completadas
+  const completedRegionIds = getCompletedRegionIds(
+    regions,
+    mapNodes,
+    completedNodeIds,
+  );
 
   // Actualizamos el progreso al entrar o regresar al mapa
   useFocusEffect(
@@ -49,8 +55,11 @@ export default function MapScreen() {
   const completedCount = completedNodeIds.length;
 
   // Abrimos la pantalla de una región
-  const handleRegionPress = (regionId: string) => {
-    router.push(`/mapa/${regionId}` as Href);
+  const handleRegionPress = (regionId: RegionId) => {
+    router.push({
+      pathname: "/mapa/[regionId]",
+      params: { regionId },
+    });
   };
 
   return (
@@ -61,7 +70,9 @@ export default function MapScreen() {
         <ScrollView showsVerticalScrollIndicator={false} nestedScrollEnabled>
           <WorldMap
             regions={regions}
+            nodes={mapNodes}
             completedRegionIds={completedRegionIds}
+            completedNodeIds={completedNodeIds}
             onRegionPress={handleRegionPress}
           />
         </ScrollView>
