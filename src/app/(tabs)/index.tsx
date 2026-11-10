@@ -1,95 +1,138 @@
-import { useEffect, useState } from "react";
+import { useFocusEffect, useRouter } from "expo-router";
+import { useCallback, useState } from "react";
 import { Alert, ScrollView, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import Animated, { FadeInDown } from "react-native-reanimated";
 
 import { palette } from "@/constants/colors";
+import { getCompletedNodeIds } from "@/storage/mapProgress";
 import { loadUser } from "@/storage/user";
+
+import { activityContents } from "@/data/activityContent";
+import { mapNodes } from "@/data/mapNodes";
 
 import DailyChallenges, {
   type Challenge,
 } from "@/components/home/DailyChallenges";
+
 import HomeHeader from "@/components/home/HomeHeader";
 import type { Lesson } from "@/components/home/LessonCard";
 import LessonCarousel from "@/components/home/LessonCarousel";
 import StreakCalendar from "@/components/home/StreakCalendar";
 import WeeklyMinutes from "@/components/home/WeeklyMinutes";
+
 import BackgroundGlow from "../../components/home/BackgroundGlow";
 import GreetingSection from "../../components/home/GreetingSection";
 
-// Sample lessons
-const lessons: Lesson[] = [
-  {
-    id: "1",
-    title: "Diseño UI",
-    questions: 10,
-    progress: 60,
-    image: "🎨",
-  },
-  {
-    id: "2",
-    title: "Teoría del color",
-    questions: 8,
-    progress: 30,
-    image: "🌈",
-  },
-  {
-    id: "3",
-    title: "Composición",
-    questions: 12,
-    progress: 80,
-    image: "🖼️",
-  },
-];
-
-// Sample daily challenges
-const challenges: Challenge[] = [
-  {
-    id: "1",
-    title: "Explora el color",
-    description: "Aprende sobre armonías cromáticas.",
-    points: 10,
-  },
-  {
-    id: "2",
-    title: "Domina la composición",
-    description: "Pon a prueba tu creatividad.",
-    points: 20,
-  },
-  {
-    id: "3",
-    title: "Crea una interfaz",
-    description: "Resuelve un pequeño desafío UI.",
-    points: 30,
-  },
-];
-
 export default function Index() {
+  const router = useRouter();
+
   const [userName, setUserName] = useState("creativo");
+  const [completedNodeIds, setCompletedNodeIds] = useState<string[]>([]);
 
-  useEffect(() => {
-    const getUser = async () => {
-      try {
-        const user = await loadUser();
+  // Load user information and progress whenever Home receives focus
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
 
-        if (user) {
-          setUserName(user.name);
+      const loadHomeData = async () => {
+        try {
+          const [user, completedNodes] = await Promise.all([
+            loadUser(),
+            getCompletedNodeIds(),
+          ]);
+
+          if (isActive) {
+            if (user) {
+              setUserName(user.name);
+            }
+
+            setCompletedNodeIds(completedNodes);
+          }
+        } catch (error) {
+          console.error("Error loading Home data:", error);
         }
-      } catch (error) {
-        console.error("Error loading user:", error);
-      }
+      };
+
+      loadHomeData();
+
+      return () => {
+        isActive = false;
+      };
+    }, []),
+  );
+
+  // Actividades que estan habilitadas y las filtra
+  const availableNodes = mapNodes.filter((node) => {
+    const hasContent = activityContents.some(
+      (activity) => activity.nodeId === node.id,
+    );
+
+    const isUnlocked = node.requiredNodeIds.every((requiredId) =>
+      completedNodeIds.includes(requiredId),
+    );
+
+    const isCompleted = completedNodeIds.includes(node.id);
+
+    return hasContent && (isUnlocked || isCompleted);
+  });
+
+  // convierte las lecciones de el mapa que estan activas en las cards
+  const lessons: Lesson[] = availableNodes.map((node) => {
+    const activity = activityContents.find((item) => item.nodeId === node.id);
+
+    const questionCount =
+      activity?.steps.filter((step) => step.type === "question").length ?? 0;
+
+    const isCompleted = completedNodeIds.includes(node.id);
+
+    const activityImages: Record<string, string> = {
+      lesson: "📘",
+      exercise: "✏️",
+      challenge: "🎯",
+      project: "🚀",
     };
 
-    getUser();
-  }, []);
+    return {
+      id: node.id,
+      title: node.title,
+      questions: questionCount,
+      progress: isCompleted ? 100 : 0,
+      image: activityImages[node.type] ?? "🎨",
+    };
+  });
 
+  // Get pending exercises, challenges and projects
+  const challenges: Challenge[] = availableNodes
+    .filter(
+      (node) => node.type !== "lesson" && !completedNodeIds.includes(node.id),
+    )
+    .slice(0, 3)
+    .map((node) => {
+      const activity = activityContents.find((item) => item.nodeId === node.id);
+
+      const questionCount =
+        activity?.steps.filter((step) => step.type === "question").length ?? 0;
+
+      return {
+        id: node.id,
+        title: node.title,
+        description: node.description,
+        points: questionCount * 10,
+      };
+    });
+
+  // Open the selected activity
   const handleContinueLesson = (id: string) => {
-    Alert.alert("Continuar lección", `Lección seleccionada: ${id}`);
+    router.push({
+      pathname: "/actividad/[nodeId]",
+      params: { nodeId: id },
+    });
   };
 
   const handleStartChallenge = (id: string) => {
-    Alert.alert("Iniciar reto", `Reto seleccionado: ${id}`);
+    handleContinueLesson(id);
   };
 
   return (
@@ -117,11 +160,15 @@ export default function Index() {
         </Animated.View>
 
         <Animated.View entering={FadeInDown.delay(300).duration(350)}>
-          <StreakCalendar completedGoals={6} totalGoals={7} streakDays={12} />
+          <StreakCalendar
+            completedGoals={completedNodeIds.length}
+            totalGoals={mapNodes.length}
+            streakDays={0}
+          />
         </Animated.View>
 
         <Animated.View entering={FadeInDown.delay(400).duration(350)}>
-          <WeeklyMinutes minutes={45} />
+          <WeeklyMinutes minutes={0} />
         </Animated.View>
 
         <Animated.View entering={FadeInDown.delay(500).duration(350)}>
