@@ -1,12 +1,10 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, View } from "react-native";
 
 type GreetingSectionProps = {
   name: string;
 };
 
-export default function GreetingSection({
-  name,
-}: GreetingSectionProps) {
+export default function GreetingSection({ name }: GreetingSectionProps) {
   return (
     <View style={styles.container}>
       <View style={styles.textContainer}>
@@ -18,8 +16,11 @@ export default function GreetingSection({
       </View>
 
       <View style={styles.mascotContainer}>
-        {/* Reemplazaremos este emoji por la imagen del conejito */}
-        <Text style={styles.mascot}>🐰</Text>
+        <Image
+          source={require("../../../assets/images/Frame 79.png")}
+          style={styles.mascot}
+          resizeMode="contain"
+        />
       </View>
     </View>
   );
@@ -59,6 +60,7 @@ const styles = StyleSheet.create({
   },
 
   mascot: {
-    fontSize: 65,
+    width: 100,
+    height: 100,
   },
 });

@@ -1,9 +1,19 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useRouter } from "expo-router";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useFocusEffect, useRouter } from "expo-router";
+import { useCallback, useState } from "react";
+import {
+    Image,
+    Pressable,
+    ScrollView,
+    StyleSheet,
+    Text,
+    View,
+} from "react-native";
 
 import { palette } from "../../constants/colors";
 import { theme } from "../../constants/theme";
+import { getPracticeProgress } from "../../storage/practiceProgress";
+import type { PracticeRecord } from "../../types/practice";
 
 const areas = [
   {
@@ -39,6 +49,37 @@ const areas = [
 export default function Practicas() {
   const router = useRouter();
 
+  const [practiceRecords, setPracticeRecords] = useState<PracticeRecord[]>([]);
+  const [isLoadingStats, setIsLoadingStats] = useState(true);
+
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+
+      const loadPracticeStats = async () => {
+        try {
+          const progress = await getPracticeProgress();
+
+          if (isActive) {
+            setPracticeRecords(progress.records);
+          }
+        } catch (error) {
+          console.error("Error loading practice statistics:", error);
+        } finally {
+          if (isActive) {
+            setIsLoadingStats(false);
+          }
+        }
+      };
+
+      loadPracticeStats();
+
+      return () => {
+        isActive = false;
+      };
+    }, []),
+  );
+
   const handleAreaPress = (areaId: string) => {
     router.push({
       pathname: "/practices/[areaId]",
@@ -53,22 +94,51 @@ export default function Practicas() {
     });
   };
 
+  // Calculate practice statistics
+  const totalCompleted = practiceRecords.length;
+
+  const totalAttempts = practiceRecords.reduce(
+    (total, record) => total + record.attempts,
+    0,
+  );
+
+  const bestPercentage = practiceRecords.reduce((best, record) => {
+    if (record.totalQuestions === 0) return best;
+
+    const percentage = Math.round(
+      (record.bestScore / record.totalQuestions) * 100,
+    );
+
+    return Math.max(best, percentage);
+  }, 0);
+
+  const latestPractice = [...practiceRecords].sort(
+    (a, b) =>
+      new Date(b.lastAttemptAt).getTime() - new Date(a.lastAttemptAt).getTime(),
+  )[0];
+
   return (
     <ScrollView
       style={styles.screen}
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
-      {/* Page heading */}
       <View style={styles.heading}>
-        <Text style={styles.title}>Prácticas</Text>
+        <View style={styles.titleRow}>
+          <Text style={styles.title}>Prácticas</Text>
+
+          <Image
+            source={require("../../../assets/images/Group 86.png")}
+            style={styles.mascot}
+            resizeMode="contain"
+          />
+        </View>
 
         <Text style={styles.subtitle}>
           Pon a prueba tus ideas. Experimenta y aprende creando.
         </Text>
       </View>
 
-      {/* Featured challenge */}
       <View style={styles.section}>
         <View style={styles.sectionHeading}>
           <Text style={styles.sectionTitle}>Reto destacado</Text>
@@ -137,7 +207,71 @@ export default function Practicas() {
         </View>
       </View>
 
-      {/* Practice areas */}
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Mi actividad práctica</Text>
+
+        {isLoadingStats ? (
+          <Text style={styles.statsMessage}>Cargando estadísticas...</Text>
+        ) : (
+          <>
+            <View style={styles.statsGrid}>
+              <View style={styles.statCard}>
+                <Ionicons
+                  name="checkmark-circle-outline"
+                  size={23}
+                  color={theme.colors.secondary}
+                />
+
+                <Text style={styles.statValue}>{totalCompleted}</Text>
+                <Text style={styles.statLabel}>Retos completados</Text>
+              </View>
+
+              <View style={styles.statCard}>
+                <Ionicons
+                  name="repeat-outline"
+                  size={23}
+                  color={theme.colors.primary}
+                />
+
+                <Text style={styles.statValue}>{totalAttempts}</Text>
+                <Text style={styles.statLabel}>Intentos realizados</Text>
+              </View>
+
+              <View style={styles.statCard}>
+                <Ionicons
+                  name="trophy-outline"
+                  size={23}
+                  color={theme.colors.secondary}
+                />
+
+                <Text style={styles.statValue}>{bestPercentage}%</Text>
+                <Text style={styles.statLabel}>Mejor puntuación</Text>
+              </View>
+            </View>
+
+            {latestPractice && (
+              <View style={styles.latestPractice}>
+                <Ionicons
+                  name="time-outline"
+                  size={20}
+                  color={theme.colors.primary}
+                />
+
+                <View style={styles.latestPracticeInfo}>
+                  <Text style={styles.latestPracticeLabel}>
+                    Última práctica
+                  </Text>
+
+                  <Text style={styles.latestPracticeTitle}>
+                    {latestPractice.practiceId}
+                  </Text>
+                </View>
+              </View>
+            )}
+          </>
+        )}
+      </View>
+
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Explora por áreas</Text>
 
@@ -357,5 +491,74 @@ const styles = StyleSheet.create({
     color: theme.colors.text,
     fontSize: theme.text.small,
     fontWeight: "600",
+  },
+
+  statsMessage: {
+    color: theme.colors.textMuted,
+    fontSize: theme.text.small,
+  },
+
+  statsGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: theme.spacing.sm,
+  },
+
+  statCard: {
+    flex: 1,
+    minWidth: "30%",
+    backgroundColor: theme.colors.card,
+    borderRadius: theme.radius.lg,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    padding: theme.spacing.md,
+    gap: theme.spacing.xs,
+  },
+
+  statValue: {
+    color: theme.colors.text,
+    fontSize: theme.text.subtitle,
+    fontWeight: "bold",
+  },
+
+  statLabel: {
+    color: theme.colors.textMuted,
+    fontSize: theme.text.caption,
+  },
+
+  latestPractice: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: theme.spacing.sm,
+    padding: theme.spacing.md,
+    borderRadius: theme.radius.md,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+  },
+
+  latestPracticeInfo: {
+    flex: 1,
+    gap: theme.spacing.xs,
+  },
+
+  latestPracticeLabel: {
+    color: theme.colors.textMuted,
+    fontSize: theme.text.caption,
+  },
+
+  latestPracticeTitle: {
+    color: theme.colors.text,
+    fontSize: theme.text.small,
+    fontWeight: "600",
+  },
+  titleRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+
+  mascot: {
+    width: 100,
+    height: 100,
   },
 });

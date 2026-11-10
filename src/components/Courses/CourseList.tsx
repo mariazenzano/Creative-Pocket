@@ -37,8 +37,6 @@ export default function CourseList({
 
   return (
     <View style={styles.container}>
-      //* Si existen cursos, recorremos el arreglo y creamos una tarjeta por
-      cada uno */
       {filteredCourses.length > 0 ? (
         filteredCourses.map((course) => (
           <CourseCard
@@ -54,7 +52,6 @@ export default function CourseList({
           />
         ))
       ) : (
-        // Si no existen cursos para el nivel seleccionado, mostramos este mensaje
         <Text style={styles.emptyText}>
           No hay cursos disponibles en este nivel.
         </Text>
