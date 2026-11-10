@@ -50,7 +50,6 @@ export default function TabsLayout() {
           ),
         }}
       />
-      <Tabs.Screen name="notificaciones" options={{ href: null }} />
     </Tabs>
   );
 }

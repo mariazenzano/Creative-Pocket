@@ -1,6 +1,6 @@
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
-import { Alert, ScrollView, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import Animated, { FadeInDown } from "react-native-reanimated";
@@ -142,9 +142,7 @@ export default function Index() {
       <ScrollView contentContainerStyle={styles.content}>
         <Animated.View entering={FadeInDown.delay(0).duration(350)}>
           <HomeHeader
-            onNotificationsPress={() =>
-              Alert.alert("Notificaciones", "Próximamente")
-            }
+            onNotificationsPress={() => router.push("/Notifications")}
           />
         </Animated.View>
 
