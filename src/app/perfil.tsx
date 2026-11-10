@@ -1,18 +1,12 @@
-
-import { useState } from "react";
-import {
-  Alert,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-} from "react-native";
-import { router } from "expo-router";
 import * as Clipboard from "expo-clipboard";
+import { router } from "expo-router";
+import { useState } from "react";
+import { Alert, SafeAreaView, ScrollView, StyleSheet } from "react-native";
 
-import ProfileHeader from "../components/profile/ProfileHeader";
-import LevelBanner from "../components/profile/LevelBanner";
-import ProgressSection from "../components/profile/ProgressSection";
 import AccountActions from "../components/profile/AccountActions";
+import LevelBanner from "../components/profile/LevelBanner";
+import ProfileHeader from "../components/profile/ProfileHeader";
+import ProgressSection from "../components/profile/ProgressSection";
 
 import { theme } from "../constants/theme";
 
@@ -27,10 +21,7 @@ export default function PerfilScreen() {
   const handleCopyId = async () => {
     await Clipboard.setStringAsync(userId);
 
-    Alert.alert(
-      "ID copiado",
-      "Tu identificador se copió correctamente."
-    );
+    Alert.alert("ID copiado", "Tu identificador se copió correctamente.");
   };
 
   // Navigate to ranking
@@ -40,31 +31,27 @@ export default function PerfilScreen() {
 
   // Logout action
   const handleLogout = () => {
-    Alert.alert(
-      "Cerrar sesión",
-      "¿Deseas cerrar tu sesión?",
-      [
-        {
-          text: "Cancelar",
-          style: "cancel",
+    Alert.alert("Cerrar sesión", "¿Deseas cerrar tu sesión?", [
+      {
+        text: "Cancelar",
+        style: "cancel",
+      },
+      {
+        text: "Cerrar sesión",
+        style: "destructive",
+        onPress: () => {
+          setIsLoggingOut(true);
+          router.replace("/Login");
         },
-        {
-          text: "Cerrar sesión",
-          style: "destructive",
-          onPress: () => {
-            setIsLoggingOut(true);
-            router.replace("/Login");
-          },
-        },
-      ]
-    );
+      },
+    ]);
   };
 
   // Change account action
   const handleChangeAccount = () => {
     Alert.alert(
       "Cambiar de cuenta",
-      "Esta función se conectará con tu sistema de usuarios."
+      "Esta función se conectará con tu sistema de usuarios.",
     );
   };
 
