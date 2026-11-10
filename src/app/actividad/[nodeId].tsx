@@ -121,23 +121,20 @@ export default function ActivityScreen() {
     ? currentStepIndex === activityContent.steps.length - 1
     : false;
 
-  // Calculamos el progreso de la actividad
+  // Calculamos el progreso
   const progressPercentage = activityContent
     ? ((currentStepIndex + 1) / activityContent.steps.length) * 100
     : 0;
 
-  // Contamos las preguntas de la actividad
   const totalQuestions = activityContent
     ? activityContent.steps.filter((step) => step.type === "question").length
     : 0;
 
-  // Calculamos el porcentaje de respuestas correctas
   const resultPercentage =
     totalQuestions > 0
       ? Math.round((correctAnswers / totalQuestions) * 100)
       : 0;
 
-  // Comprobamos si el estudiante aprobó
   const hasPassed =
     totalQuestions === 0 || resultPercentage >= PASSING_PERCENTAGE;
 

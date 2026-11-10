@@ -1,9 +1,8 @@
-
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const XP_PROGRESS_KEY = "@creative-pocket/xp-progress";
 
-// Estructura 
+// Estructura
 type XPProgress = {
   totalXP: number;
   rewardedNodeIds: string[];
@@ -57,10 +56,7 @@ export async function getXPProgress(): Promise<XPProgress> {
 
 // Guardar el progreso de XP
 async function saveXPProgress(progress: XPProgress): Promise<void> {
-  await AsyncStorage.setItem(
-    XP_PROGRESS_KEY,
-    JSON.stringify(progress),
-  );
+  await AsyncStorage.setItem(XP_PROGRESS_KEY, JSON.stringify(progress));
 }
 
 // Entregar XP por completar una actividad
@@ -87,4 +83,11 @@ export async function awardXPForNode(
   await saveXPProgress(updatedProgress);
 
   return updatedProgress.totalXP;
+}
+// practica especial
+export async function awardXPForPractice(
+  practiceId: string,
+  xpAmount: number,
+): Promise<number> {
+  return awardXPForNode(`practice:${practiceId}`, xpAmount);
 }
