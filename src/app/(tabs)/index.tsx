@@ -103,7 +103,7 @@ export default function Index() {
     };
   });
 
-  // Get pending exercises, challenges and projects
+  // cards de retos diarios
   const challenges: Challenge[] = availableNodes
     .filter(
       (node) => node.type !== "lesson" && !completedNodeIds.includes(node.id),
@@ -123,7 +123,7 @@ export default function Index() {
       };
     });
 
-  // Open the selected activity
+  // te redirige a las lecciones
   const handleContinueLesson = (id: string) => {
     router.push({
       pathname: "/actividad/[nodeId]",
@@ -139,10 +139,7 @@ export default function Index() {
     <SafeAreaView style={styles.screen}>
       <BackgroundGlow />
 
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.content}
-      >
+      <ScrollView contentContainerStyle={styles.content}>
         <Animated.View entering={FadeInDown.delay(0).duration(350)}>
           <HomeHeader
             onNotificationsPress={() =>
