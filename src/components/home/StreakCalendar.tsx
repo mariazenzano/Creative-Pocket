@@ -2,13 +2,13 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { StyleSheet, Text, View } from "react-native";
 
 const weekDays = [
-  { label: "L", completed: true },
-  { label: "M", completed: true },
-  { label: "M", completed: true },
-  { label: "J", completed: true },
-  { label: "V", completed: true },
-  { label: "S", completed: true },
-  { label: "D", completed: false },
+  { id: "monday", label: "L", completed: true },
+  { id: "tuesday", label: "M", completed: true },
+  { id: "wednesday", label: "M", completed: true },
+  { id: "thursday", label: "J", completed: true },
+  { id: "friday", label: "V", completed: true },
+  { id: "saturday", label: "S", completed: true },
+  { id: "sunday", label: "D", completed: false },
 ];
 
 type StreakCalendarProps = {
@@ -47,7 +47,7 @@ export default function StreakCalendar({
 
       <View style={styles.calendar}>
         {weekDays.map((day, index) => (
-          <View key={day.label} style={styles.day}>
+          <View key={day.id} style={styles.day}>
             <Text style={styles.dayLabel}>{day.label}</Text>
 
             <View

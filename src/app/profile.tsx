@@ -1,6 +1,7 @@
 import * as Clipboard from "expo-clipboard";
 import { router } from "expo-router";
-import { Alert, SafeAreaView, ScrollView, StyleSheet } from "react-native";
+import { Alert, ScrollView, StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import AccountActions from "../components/profile/AccountActions";
 import LevelBanner from "../components/profile/LevelBanner";
