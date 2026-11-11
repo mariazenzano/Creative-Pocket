@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
     padding: theme.spacing.md,
     borderRadius: theme.radius.lg,
     borderWidth: 1,
-    borderColor: palette.primary[300],
+    borderColor: palette.primary[200],
     backgroundColor: colors.card,
   },
   positionIcon: {
