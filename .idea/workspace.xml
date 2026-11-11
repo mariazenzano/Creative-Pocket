@@ -5,9 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f3aa8c1f-cbed-46fd-bb76-0b463e97745b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(tabs)/ranking.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(tabs)/ranking.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/actividad/[nodeId].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/actividad/[nodeId].tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/mapa/[regionId].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/mapa/[regionId].tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/perfil.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/perfil.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/profile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/profile.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/unboarding.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/unboarding.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,7 +41,7 @@
     "RunOnceActivity.readMode.enableVisualFormatting": "true",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
-    "git-widget-placeholder": "feature/ranking",
+    "git-widget-placeholder": "fix/app-bug-fixes",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "D:/Escritorio/Diseño/React/Creative-Pocket"
   }

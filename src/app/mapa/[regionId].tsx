@@ -8,7 +8,6 @@ import {
   useRouter,
   type Href,
 } from "expo-router";
-import { getCompletedRegionIds } from "../../utils/mapProgress";
 
 import { theme } from "../../constants/theme";
 import { mapConnections, mapNodes } from "../../data/mapNodes";
@@ -16,7 +15,11 @@ import { regions } from "../../data/regions";
 
 import type { MapNode } from "../../types/map";
 
-import { getNodeStatus, getRegionStatus } from "../../utils/mapProgress";
+import {
+  getCompletedRegionIds,
+  getNodeStatus,
+  getRegionStatus,
+} from "../../utils/mapProgress";
 
 import { getCompletedNodeIds } from "../../storage/mapProgress";
 
