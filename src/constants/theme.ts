@@ -20,6 +20,23 @@ export const theme = {
     max2: 40, // cards
     full: 999, // circles and pills: leave it as is
   },
+  sizes: {
+    touchTarget: 44,
+    iconTiny: 12,
+    iconSmall: 24,
+    iconMedium: 28,
+    iconLarge: 56,
+    avatarSmall: 40,
+    avatar: 48,
+    rankMarker: 24,
+    listRow: 64,
+    rankingHeader: 112,
+    podium: 226,
+    podiumColumn: 112,
+    podiumFirst: 136,
+    podiumSecond: 112,
+    podiumThird: 98,
+  },
   // Text sizes: select a text → Design panel → Typography → Font size.
   text: {
     display: 32, // biggest text: a big number or hero title
