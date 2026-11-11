@@ -1,7 +1,7 @@
 import * as Clipboard from "expo-clipboard";
 import { router } from "expo-router";
-import { useState } from "react";
-import { Alert, SafeAreaView, ScrollView, StyleSheet } from "react-native";
+import { Alert, ScrollView, StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import AccountActions from "../components/profile/AccountActions";
 import LevelBanner from "../components/profile/LevelBanner";
@@ -11,7 +11,6 @@ import ProgressSection from "../components/profile/ProgressSection";
 import { theme } from "../constants/theme";
 
 export default function PerfilScreen() {
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   // Temporary profile information
   const userName = "María Fernanda Zenzano";
@@ -40,7 +39,6 @@ export default function PerfilScreen() {
         text: "Cerrar sesión",
         style: "destructive",
         onPress: () => {
-          setIsLoggingOut(true);
           router.replace("/Login");
         },
       },

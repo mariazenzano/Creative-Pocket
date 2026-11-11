@@ -1,6 +1,6 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import {
   Alert,
   Animated,
@@ -45,9 +45,12 @@ function getActivityLabel(type: MapNode["type"]): string {
 }
 
 export default function ActivityScreen() {
-  const router = useRouter();
-
   const { nodeId } = useLocalSearchParams<{ nodeId: string }>();
+  return <ActivityContent key={nodeId} nodeId={nodeId} />;
+}
+
+function ActivityContent({ nodeId }: { nodeId: string }) {
+  const router = useRouter();
 
   const [isSaving, setIsSaving] = useState(false);
   const [completedRegion, setCompletedRegion] = useState<Region | null>(null);
@@ -65,25 +68,12 @@ export default function ActivityScreen() {
   const [showResults, setShowResults] = useState(false);
 
   // Animaciones
-  const fireScale = useRef(new Animated.Value(1)).current;
-  const shakeX = useRef(new Animated.Value(0)).current;
-  const trophyScale = useRef(new Animated.Value(0.7)).current;
+  const [fireScale] = useState(() => new Animated.Value(1));
+  const [shakeX] = useState(() => new Animated.Value(0));
+  const [trophyScale] = useState(() => new Animated.Value(0.7));
 
   // Buscamos la actividad seleccionada
   const activity = mapNodes.find((node) => node.id === nodeId);
-
-  // Reiniciamos los estados cuando cambia la actividad
-  useEffect(() => {
-    setCurrentStepIndex(0);
-    setSelectedOptionId(null);
-    setCorrectAnswers(0);
-    setShowResults(false);
-    setCompletedRegion(null);
-
-    fireScale.setValue(1);
-    shakeX.setValue(0);
-    trophyScale.setValue(0.7);
-  }, [nodeId, fireScale, shakeX, trophyScale]);
 
   // Comprobamos que la actividad exista
   if (!activity) {
@@ -283,7 +273,7 @@ export default function ActivityScreen() {
       }
 
       router.back();
-    } catch (error) {
+    } catch {
       Alert.alert(
         "No se pudo guardar",
         "Intenta completar la actividad nuevamente.",
