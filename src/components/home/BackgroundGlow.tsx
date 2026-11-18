@@ -14,9 +14,9 @@ export default function BackgroundGlow() {
             r="380"
             gradientUnits="userSpaceOnUse"
           >
-            <Stop offset="0%" stopColor="#6200EE" stopOpacity={0.55} />
-            <Stop offset="45%" stopColor="#6200EE" stopOpacity={0.2} />
-            <Stop offset="100%" stopColor="#6200EE" stopOpacity={0} />
+            <Stop offset="0%" stopColor="#7e3bdc" stopOpacity={0.55} />
+            <Stop offset="45%" stopColor="#c240d6" stopOpacity={0.2} />
+            <Stop offset="100%" stopColor="#bd49d4" stopOpacity={0} />
           </RadialGradient>
         </Defs>
 

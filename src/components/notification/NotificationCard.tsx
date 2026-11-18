@@ -14,14 +14,6 @@ export default function NotificationCard({ notification, onDelete }: Props) {
   return (
     <View style={styles.card}>
       <View style={styles.mascotWrap}>
-        {/* Pendiente: agregar la imagen de la mascota cuando esté disponible.
-        <Image
-          source={require("../../../assets/images/conejologin.png")}
-          style={styles.mascot}
-          resizeMode="contain"
-          accessibilityLabel="Mascota de Creative Pocket"
-        />
-        */}
         <Ionicons
           name={notification.icon}
           size={18}
@@ -41,7 +33,10 @@ export default function NotificationCard({ notification, onDelete }: Props) {
         accessibilityLabel={`Borrar notificación: ${notification.title}`}
         onPress={() => onDelete(notification.id)}
         hitSlop={8}
-        style={({ pressed }) => [styles.deleteButton, pressed && styles.pressed]}
+        style={({ pressed }) => [
+          styles.deleteButton,
+          pressed && styles.pressed,
+        ]}
       >
         <Ionicons name="trash-outline" size={16} color="#C4A7FF" />
       </Pressable>

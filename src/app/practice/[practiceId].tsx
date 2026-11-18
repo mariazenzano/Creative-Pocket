@@ -71,7 +71,7 @@ export default function PracticeScreen() {
     try {
       setIsSaving(true);
 
-      // Save the attempt and update the best score.
+      
       const record = await savePracticeResult(
         practice.id,
         correctAnswers,

@@ -54,7 +54,20 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: "hierarchy",
     title: "Jerarquía Visual",
-    prompt: "¿Cuál de los bloques representa una correcta jerarquía tipográfica?",
+    prompt:
+      "¿Cuál de los bloques representa una correcta jerarquía tipográfica?",
+    art: "hierarchy",
+    layout: "list",
+    answers: [
+      { label: "El bloque superior (A)", isCorrect: true },
+      { label: "El bloque inferior (B)", isCorrect: false },
+      { label: "Ambos bloques son incorrectos", isCorrect: false },
+    ],
+  },
+  {
+    id: "pregunta examen",
+    title: "paco",
+    prompt: "¿que?",
     art: "hierarchy",
     layout: "list",
     answers: [

@@ -29,7 +29,7 @@ import RegionMap from "../../components/Map/RegionMap";
 export default function RegionScreen() {
   const router = useRouter();
 
-  // Obtenemos el identificador de la región desde la URL
+  // Obtenemos el identificador 
   const { regionId } = useLocalSearchParams<{ regionId: string }>();
 
   // Buscamos la región correspondiente
@@ -83,10 +83,10 @@ export default function RegionScreen() {
     );
   }
 
-  // Filtramos las actividades de esta región
+  // Filtramos las actividades 
   const regionNodes = mapNodes.filter((node) => node.regionId === region.id);
 
-  // Obtenemos los identificadores de sus actividades
+  //identificadores de sus actividades
   const regionNodeIds = regionNodes.map((node) => node.id);
 
   // Conservamos únicamente las conexiones de esta región
@@ -96,10 +96,10 @@ export default function RegionScreen() {
       regionNodeIds.includes(connection.to),
   );
 
-  // Calculamos el estado de la región
+  // Calculamos el estado región
   const regionStatus = getRegionStatus(region, completedRegionIds);
 
-  // Calculamos el estado de la actividad seleccionada
+  // Calculamos el estado actividad seleccionada
   const selectedNodeStatus = selectedNode
     ? getNodeStatus(selectedNode, completedNodeIds, regionStatus)
     : "locked";
@@ -113,7 +113,7 @@ export default function RegionScreen() {
     }
   };
 
-  // Cerramos el modal y navegamos a la actividad
+  // Cerramos el modal y navegamos 
   const handleStartActivity = (nodeId: string) => {
     setSelectedNode(null);
 
@@ -122,7 +122,7 @@ export default function RegionScreen() {
 
   return (
     <View style={styles.screen}>
-      {/* Encabezado de la región */}
+      
       <View style={styles.header}>
         <Pressable style={styles.backButton} onPress={() => router.back()}>
           <Ionicons name="arrow-back" size={24} color={theme.colors.text} />
@@ -131,7 +131,7 @@ export default function RegionScreen() {
         <Text style={styles.headerTitle}>Explorar región</Text>
       </View>
 
-      {/* Recorrido de aprendizaje */}
+      
       <ScrollView showsVerticalScrollIndicator={false}>
         <RegionMap
           region={region}
@@ -149,7 +149,7 @@ export default function RegionScreen() {
         )}
       </ScrollView>
 
-      {/* Tarjeta de la actividad seleccionada */}
+     
       <ChallengeCard
         node={selectedNode}
         status={selectedNodeStatus}

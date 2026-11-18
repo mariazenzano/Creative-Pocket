@@ -23,10 +23,10 @@ import { completeNode, getCompletedNodeIds } from "../../storage/mapProgress";
 import { awardXPForNode } from "../../storage/xpProgress";
 import { getCompletedRegionIds } from "../../utils/mapProgress";
 
-// Porcentaje mínimo para aprobar
+// Porcentaje mín
 const PASSING_PERCENTAGE = 67;
 
-// XP que se obtiene por cada respuesta correcta
+// XP por resp
 const XP_PER_CORRECT_ANSWER = 10;
 
 function getActivityLabel(type: MapNode["type"]): string {

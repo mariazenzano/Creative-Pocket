@@ -2,8 +2,8 @@ export const palette = {
   primary: {
     100: "#BAABFF", //[cite: 3]
     200: "#7557FF", //[cite: 3]
-    300: "#3003FF", //[cite: 3]
-    400: "#2400C8", //[cite: 3]
+    300: "#b44ad4", //[cite: 3]
+    400: "#4a29db", //[cite: 3]
     500: "#19008E", //[cite: 3]
   },
   secondary: {

@@ -137,6 +137,11 @@ export default function Index() {
 
   return (
     <SafeAreaView style={styles.screen}>
+      <title>inicio de creative pocket</title>
+      <meta
+        name="description"
+        content="Creative Pocket es una plataforma de aprendizaje interactivo para diseñadores. Aprende, practica y desarrolla tus habilidades creativas a tu propio ritmo."
+      />
       <BackgroundGlow />
 
       <ScrollView contentContainerStyle={styles.content}>

@@ -4,14 +4,6 @@ export default function NotificationsEmptyState() {
   return (
     <View style={styles.container}>
       <View style={styles.illustration}>
-        {/* Pendiente: agregar la imagen de la mascota cuando esté disponible.
-        <Image
-          source={require("../../../assets/images/conejologin.png")}
-          style={styles.mascot}
-          resizeMode="contain"
-          accessibilityLabel="Mascota de Creative Pocket"
-        />
-        */}
         <View style={styles.speechBubble}>
           <Text style={styles.speechText}>Sin notificaciones</Text>
         </View>
