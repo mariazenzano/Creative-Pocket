@@ -42,6 +42,9 @@ export default function Login() {
     if (!/[A-Z]/.test(value)) {
       return "Incluye al menos una letra mayúscula.";
     }
+    if (!/[0-9]/.test(value)) {
+      return "Incluye al menos un número.";
+    }
     return "";
   };
 
