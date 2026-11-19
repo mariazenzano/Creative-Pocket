@@ -1,6 +1,6 @@
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
-import { ScrollView, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import Animated, { FadeInDown } from "react-native-reanimated";
@@ -137,11 +137,9 @@ export default function Index() {
 
   return (
     <SafeAreaView style={styles.screen}>
-      <title>inicio de creative pocket</title>
-      <meta
-        name="description"
-        content="Creative Pocket es una plataforma de aprendizaje interactivo para diseñadores. Aprende, practica y desarrolla tus habilidades creativas a tu propio ritmo."
-      />
+      <Text accessibilityRole="header" style={styles.srOnly}>
+        Inicio de Creative Pocket
+      </Text>
       <BackgroundGlow />
 
       <ScrollView contentContainerStyle={styles.content}>
@@ -193,5 +191,12 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     gap: 25,
     paddingBottom: 35,
+  },
+
+  srOnly: {
+    position: "absolute",
+    width: 1,
+    height: 1,
+    overflow: "hidden",
   },
 });
