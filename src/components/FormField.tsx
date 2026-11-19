@@ -9,6 +9,7 @@ type Props = {
   value: string;
   onChangeText: (text: string) => void;
   isPassword?: boolean;
+  error?: string;
 };
 
 export default function FormField({
@@ -17,12 +18,14 @@ export default function FormField({
   value,
   onChangeText,
   isPassword,
+  error,
 }: Props) {
   const [hidden, setHidden] = useState(true);
 
   return (
     <View style={styles.container}>
       <Text style={styles.label}>{label}</Text>
+
       <View style={styles.inputRow}>
         <TextInput
           style={styles.input}
@@ -33,6 +36,7 @@ export default function FormField({
           secureTextEntry={isPassword && hidden}
           autoCapitalize="none"
         />
+
         {isPassword && (
           <Pressable onPress={() => setHidden(!hidden)}>
             <Ionicons
@@ -43,13 +47,20 @@ export default function FormField({
           </Pressable>
         )}
       </View>
+
+      {error ? <Text style={styles.error}>{error}</Text> : null}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { gap: theme.spacing.xs },
-  label: { fontSize: theme.text.body, color: theme.colors.text },
+  container: {
+    gap: theme.spacing.xs,
+  },
+  label: {
+    fontSize: theme.text.body,
+    color: theme.colors.text,
+  },
   inputRow: {
     flexDirection: "row",
     alignItems: "center",
@@ -62,5 +73,9 @@ const styles = StyleSheet.create({
     paddingVertical: theme.spacing.md,
     fontSize: theme.text.heading,
     color: theme.colors.text,
+  },
+  error: {
+    fontSize: 12,
+    color: "#FF6B6B",
   },
 });

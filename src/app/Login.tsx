@@ -2,64 +2,130 @@ import { palette } from "@/constants/colors";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
-import SocialButton from "../components/SocialButton";
-import PrimaryButton from "../components/PrimaryButton";
-import LoginHeader from "../components/LoginHeader";
-import InlineLink from "../components/InlineLink";
+
 import FormField from "../components/FormField";
+import InlineLink from "../components/InlineLink";
+import LoginHeader from "../components/LoginHeader";
+import PrimaryButton from "../components/PrimaryButton";
+import SocialButton from "../components/SocialButton";
 import { theme } from "../constants/theme";
 import { loadUser, saveUser } from "../storage/user";
+
+type FieldErrors = {
+  username?: string;
+  password?: string;
+  confirmPassword?: string;
+};
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isRegistering, setIsRegistering] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [errors, setErrors] = useState<FieldErrors>({});
 
   const router = useRouter();
 
-  // Register a new user
+  // Validate username
+  const getUsernameError = (value: string) => {
+    if (!value.trim()) return "Este campo es obligatorio.";
+    if (value.trim().length < 4) {
+      return "Tu nombre debe tener al menos 4 caracteres.";
+    }
+    return "";
+  };
+  const getPasswordError = (value: string) => {
+    if (!value) return "Este campo es obligatorio.";
+    if (value.length < 5) {
+      return "Usa al menos 5 caracteres.";
+    }
+    if (!/[A-Z]/.test(value)) {
+      return "Incluye al menos una letra mayúscula.";
+    }
+    return "";
+  };
+
+  const handleUsernameChange = (value: string) => {
+    setUsername(value);
+
+    setErrors((prev) => ({
+      ...prev,
+      username: value ? getUsernameError(value) : undefined,
+    }));
+  };
+
+  const handlePasswordChange = (value: string) => {
+    setPassword(value);
+
+    setErrors((prev) => ({
+      ...prev,
+      password: value ? getPasswordError(value) : undefined,
+      confirmPassword:
+        confirmPassword && value !== confirmPassword
+          ? "Las contraseñas no coinciden."
+          : undefined,
+    }));
+  };
+
+  const handleConfirmPasswordChange = (value: string) => {
+    setConfirmPassword(value);
+
+    setErrors((prev) => ({
+      ...prev,
+      confirmPassword:
+        value && value !== password
+          ? "Las contraseñas no coinciden."
+          : undefined,
+    }));
+  };
+
   const handleRegister = async () => {
-    if (!username.trim() || !password || !confirmPassword) {
-      Alert.alert("Campos incompletos", "Completa todos los campos.");
+    const newErrors: FieldErrors = {
+      username: getUsernameError(username),
+      password: getPasswordError(password),
+      confirmPassword: !confirmPassword
+        ? "Confirma tu contraseña."
+        : password !== confirmPassword
+          ? "Las contraseñas no coinciden."
+          : "",
+    };
+
+    setErrors(newErrors);
+
+    if (newErrors.username || newErrors.password || newErrors.confirmPassword) {
       return;
     }
-
-    if (password !== confirmPassword) {
-      Alert.alert("Contraseñas diferentes", "Las contraseñas no coinciden.");
-      return;
-    }
-
-
 
     try {
       await saveUser({
         name: username.trim(),
       });
 
-      // Return to the login form.
       setIsRegistering(false);
       setPassword("");
       setConfirmPassword("");
+      setErrors({});
 
       Alert.alert(
         "¡Cuenta creada!",
         "Tu cuenta se guardó correctamente. Ahora puedes iniciar sesión.",
       );
     } catch (error) {
-      Alert.alert(
-        "Error",
-        "No pudimos guardar tus datos. Inténtalo nuevamente.",
-      );
-
+      Alert.alert("Error", "No pudimos guardar tus datos.");
       console.error("Error saving user:", error);
     }
   };
 
   // Login an existing user
   const handleLogin = async () => {
-    if (!username.trim() || !password) {
-      Alert.alert("Campos incompletos", "Completa tus datos.");
+    const newErrors: FieldErrors = {
+      username: getUsernameError(username),
+      password: getPasswordError(password),
+    };
+
+    setErrors(newErrors);
+
+    if (newErrors.username || newErrors.password) {
       return;
     }
 
@@ -67,20 +133,22 @@ export default function Login() {
       const user = await loadUser();
 
       if (!user) {
-        Alert.alert("Usuario no encontrado", "Primero debes crear una cuenta.");
+        setErrors({
+          username: "Primero debes crear una cuenta.",
+        });
         return;
       }
 
       if (user.name.trim().toLowerCase() !== username.trim().toLowerCase()) {
-        Alert.alert("Usuario incorrecto", "Revisa tu nombre de usuario.");
+        setErrors({
+          username: "El usuario no es correcto.",
+        });
         return;
       }
 
-      // Navigate to the main index screen.
       router.replace("/(tabs)");
     } catch (error) {
       Alert.alert("Error", "No pudimos recuperar tus datos.");
-
       console.error("Login error:", error);
     }
   };
@@ -98,15 +166,17 @@ export default function Login() {
           label={isRegistering ? "Nombre" : "Usuario"}
           placeholder={isRegistering ? "Tu nombre" : "Nombre de usuario"}
           value={username}
-          onChangeText={setUsername}
+          onChangeText={handleUsernameChange}
+          error={errors.username}
         />
 
         <FormField
           label="Contraseña"
           placeholder="Contraseña"
           value={password}
-          onChangeText={setPassword}
+          onChangeText={handlePasswordChange}
           isPassword
+          error={errors.password}
         />
 
         {isRegistering && (
@@ -114,8 +184,9 @@ export default function Login() {
             label="Confirmar contraseña"
             placeholder="Repite tu contraseña"
             value={confirmPassword}
-            onChangeText={setConfirmPassword}
+            onChangeText={handleConfirmPasswordChange}
             isPassword
+            error={errors.confirmPassword}
           />
         )}
       </View>
@@ -127,6 +198,7 @@ export default function Login() {
           setIsRegistering(!isRegistering);
           setPassword("");
           setConfirmPassword("");
+          setErrors({});
         }}
       />
 

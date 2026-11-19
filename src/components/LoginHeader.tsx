@@ -18,7 +18,7 @@ export default function LoginHeader() {
 
 const styles = StyleSheet.create({
   container: { alignItems: "center", gap: theme.spacing.lg },
-  // Size from Figma (an image always needs width and height)
+  
   logo: { width: 80, height: 118 },
   title: {
     fontSize: theme.text.subtitle,

@@ -8,10 +8,11 @@ export default function IntroScreen() {
   const { width, height } = useWindowDimensions();
 
   const player = useVideoPlayer(
-    require("@/assets/videos/creative-pocket.mp4"),
+    require("../../assets/video/creative-pocket.mp4"),
     (player) => {
       player.loop = false;
       player.muted = true;
+      player.playbackRate = 1.5;
       player.play();
     },
   );
