@@ -1,4 +1,3 @@
-
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const LEARNING_TIME_KEY = "@creative-pocket/learning-time";
@@ -49,10 +48,7 @@ export async function getLearningTimeEntries(): Promise<LearningTimeEntry[]> {
 
     const parsedEntries: unknown = JSON.parse(storedEntries);
 
-    if (
-      Array.isArray(parsedEntries) &&
-      parsedEntries.every(isValidEntry)
-    ) {
+    if (Array.isArray(parsedEntries) && parsedEntries.every(isValidEntry)) {
       return parsedEntries;
     }
 
@@ -68,11 +64,7 @@ export async function saveLearningSession(
   nodeId: string,
   durationSeconds: number,
 ): Promise<void> {
-  if (
-    !nodeId ||
-    !Number.isFinite(durationSeconds) ||
-    durationSeconds <= 0
-  ) {
+  if (!nodeId || !Number.isFinite(durationSeconds) || durationSeconds <= 0) {
     return;
   }
 
