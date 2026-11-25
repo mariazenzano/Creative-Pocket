@@ -1,118 +1,184 @@
-import { useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import {
+  ActivityIndicator,
+  Platform,
+  Pressable,
+  Switch,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 
-import { askNotificationPermission } from "@/notifications/notifications";
+import { theme } from "@/constants/theme";
+import { useDailyReminder } from "@/notifications/useDailyReminder";
 
-type Status = "idle" | "granted" | "denied";
+import { styles } from "./NotifyReminderCard.styles";
 
-export default function NotifyCard() {
-  const [status, setStatus] = useState<Status>("idle");
+export default function NotifyReminderCard() {
+  const {
+    errorMessage,
+    handleReminderToggle,
+    handleRequestPermission,
+    handleSaveReminder,
+    handleTestNotification,
+    hourInput,
+    isLoading,
+    isSaving,
+    isTimeValid,
+    minuteInput,
+    permissionGranted,
+    permissionRequested,
+    reminder,
+    testMessage,
+    timeValidationMessage,
+    updateHourInput,
+    updateMinuteInput,
+  } = useDailyReminder();
 
-  const handlePress = async () => {
-    try {
-      const allowed = await askNotificationPermission();
-
-      setStatus(allowed ? "granted" : "denied");
-    } catch (error) {
-      console.error("Error requesting notification permission:", error);
-      setStatus("denied");
-    }
-  };
-
-  if (status === "granted") {
-    return (
-      <View style={styles.card}>
-        <Text style={styles.icon}>🔔</Text>
-
-        <View style={styles.info}>
-          <Text style={styles.title}>
-            ¡Listo! Ya tienes los avisos activados.
-          </Text>
-          <Text style={styles.description}>
-            Podrás recibir nuestros recordatorios diarios.
-          </Text>
-        </View>
-      </View>
-    );
-  }
-
-  if (status === "denied") {
-    return (
-      <View style={styles.card}>
-        <Text style={styles.icon}>🔕</Text>
-
-        <View style={styles.info}>
-          <Text style={styles.title}>Sin avisos</Text>
-          <Text style={styles.description}>
-            Puedes activarlos desde los ajustes de tu celular.
-          </Text>
-        </View>
-      </View>
-    );
-  }
+  const busy = isSaving;
 
   return (
     <View style={styles.card}>
-      <Text style={styles.icon}>🔔</Text>
-
-      <View style={styles.info}>
-        <Text style={styles.title}>
-          ¿Quieres que te recordemos todos los días?
-        </Text>
-
-        <Text style={styles.description}>
-          Activa los avisos y no olvides continuar aprendiendo.
-        </Text>
+      <View style={styles.heading}>
+        <Ionicons
+          name="notifications-outline"
+          size={22}
+          color={theme.colors.primarySoft}
+        />
+        <View style={styles.headingText}>
+          <Text style={styles.title}>Recordatorio diario</Text>
+          <Text style={styles.description}>
+            Continúa aprendiendo diseño con un aviso a la hora que elijas.
+          </Text>
+        </View>
       </View>
 
-      <Pressable style={styles.button} onPress={handlePress}>
-        <Text style={styles.buttonText}>Sí, avísame</Text>
-      </Pressable>
+      {isLoading ? (
+        <ActivityIndicator color={theme.colors.primarySoft} />
+      ) : Platform.OS === "web" ? (
+        <Text style={styles.description}>
+          Los recordatorios funcionan desde la app en tu celular.
+        </Text>
+      ) : reminder ? (
+        <View style={styles.activeRow}>
+          <View style={styles.activeInfo}>
+            <Text style={styles.statusTitle}>
+              {permissionGranted
+                ? "Te avisamos todos los días a " +
+                  [reminder.hour, reminder.minute]
+                    .map((part) => String(part).padStart(2, "0"))
+                    .join(":")
+                : "Avisos desactivados en los ajustes del celular"}
+            </Text>
+            {!permissionGranted && (
+              <Text style={styles.description}>
+                Actívalos en los ajustes o apaga este recordatorio.
+              </Text>
+            )}
+          </View>
+          <Switch
+            value
+            onValueChange={handleReminderToggle}
+            disabled={busy}
+            accessibilityLabel="Apagar recordatorio diario"
+          />
+        </View>
+      ) : !permissionGranted ? (
+        <View style={styles.permissionSection}>
+          <View style={styles.statusRow}>
+            <Ionicons
+              name={
+                permissionRequested
+                  ? "notifications-off-outline"
+                  : "notifications-outline"
+              }
+              size={20}
+              color={theme.colors.primarySoft}
+            />
+            <Text style={styles.description}>
+              {permissionRequested
+                ? "Sin permiso. Puedes activarlo en los ajustes del celular."
+                : "¿Te avisamos cada día para que no pierdas tu ritmo?"}
+            </Text>
+          </View>
+          <Pressable
+            style={[styles.button, busy && styles.buttonDisabled]}
+            onPress={handleRequestPermission}
+            disabled={busy}
+            accessibilityRole="button"
+          >
+            <Text style={styles.buttonText}>
+              {busy ? "Solicitando permiso..." : "Avísame"}
+            </Text>
+          </Pressable>
+        </View>
+      ) : (
+        <View style={styles.form}>
+          <Text style={styles.statusTitle}>¿A qué hora te avisamos?</Text>
+          <View style={styles.timeFields}>
+            <View style={styles.timeField}>
+              <Text style={styles.fieldLabel}>Hora (0–23)</Text>
+              <TextInput
+                value={hourInput}
+                onChangeText={updateHourInput}
+                keyboardType="number-pad"
+                maxLength={2}
+                style={styles.timeInput}
+                accessibilityLabel="Hora del recordatorio"
+              />
+            </View>
+            <View style={styles.timeField}>
+              <Text style={styles.fieldLabel}>Minuto (0–59)</Text>
+              <TextInput
+                value={minuteInput}
+                onChangeText={updateMinuteInput}
+                keyboardType="number-pad"
+                maxLength={2}
+                style={styles.timeInput}
+                accessibilityLabel="Minuto del recordatorio"
+              />
+            </View>
+          </View>
+          {timeValidationMessage && (
+            <Text style={styles.error}>{timeValidationMessage}</Text>
+          )}
+          <Pressable
+            style={[
+              styles.button,
+              (!isTimeValid || busy) && styles.buttonDisabled,
+            ]}
+            onPress={handleSaveReminder}
+            disabled={!isTimeValid || busy}
+            accessibilityRole="button"
+          >
+            <Text style={styles.buttonText}>
+              {busy ? "Guardando..." : "Guardar recordatorio"}
+            </Text>
+          </Pressable>
+        </View>
+      )}
+
+      {Platform.OS !== "web" && (
+        <View style={styles.testSection}>
+          <Pressable
+            style={[styles.testButton, busy && styles.buttonDisabled]}
+            onPress={handleTestNotification}
+            disabled={busy || Boolean(testMessage)}
+            accessibilityRole="button"
+          >
+            <Text style={styles.testButtonText}>
+              {busy ? "Preparando prueba..." : "Probar aviso en 10 segundos"}
+            </Text>
+          </Pressable>
+          <Text style={styles.description}>
+            Al tocarlo, permite las notificaciones y deja la app minimizada para
+            ver el aviso en el celular.
+          </Text>
+          {testMessage && <Text style={styles.success}>{testMessage}</Text>}
+        </View>
+      )}
+
+      {errorMessage && <Text style={styles.error}>{errorMessage}</Text>}
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  card: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-    padding: 16,
-    borderRadius: 24,
-    backgroundColor: "#292929",
-  },
-
-  icon: {
-    fontSize: 25,
-  },
-
-  info: {
-    flex: 1,
-    gap: 5,
-  },
-
-  title: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: "#FFFFFF",
-  },
-
-  description: {
-    fontSize: 13,
-    lineHeight: 19,
-    color: "#CCCCCC",
-  },
-
-  button: {
-    paddingVertical: 10,
-    paddingHorizontal: 14,
-    borderRadius: 999,
-    backgroundColor: "#FFFFFF",
-  },
-
-  buttonText: {
-    fontSize: 13,
-    fontWeight: "700",
-    color: "#222222",
-  },
-});
