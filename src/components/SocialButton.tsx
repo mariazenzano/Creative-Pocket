@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     gap: theme.spacing.md,
     paddingVertical: theme.spacing.md,
     borderRadius: theme.radius.full,
-    borderWidth: 1, // stroke width from Figma
+    borderWidth: 1, //  width from Figma
     borderColor: theme.colors.textMuted,
   },
   pressed: { opacity: 0.8, transform: [{ scale: 0.98 }] },

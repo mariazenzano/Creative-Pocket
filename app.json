@@ -2,7 +2,7 @@
   "expo": {
     "name": "creative-pocket",
     "slug": "creative-pocket",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "creativepocket",
@@ -11,6 +11,7 @@
       "icon": "./assets/expo.icon"
     },
     "android": {
+      "versionCode": 2,
       "adaptiveIcon": {
         "backgroundColor": "#30007D",
         "foregroundImage": "./assets/images/adaptive-icon.png"

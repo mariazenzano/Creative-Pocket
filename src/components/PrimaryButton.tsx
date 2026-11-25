@@ -13,21 +13,20 @@ export default function PrimaryButton({ label, onPress }: Props) {
   );
 }
 const styles = StyleSheet.create({
-  // Select your button in Figma and fill each value with a theme key.
   button: {
-    width: "90%",
-    backgroundColor: palette.primary[300], // Fill → theme.colors
-    paddingVertical: theme.spacing.sm, // Auto layout → vertical padding → theme.spacing
-    paddingHorizontal: theme.spacing.md, // Auto layout → horizontal padding → theme.spacing
-    borderRadius: theme.radius.max1, // Corner radius → theme.radius
+    width: "100%",
+    backgroundColor: palette.primary[300],
+    paddingVertical: theme.spacing.sm,
+    paddingHorizontal: theme.spacing.md,
+    borderRadius: theme.radius.max1,
     alignItems: "center",
-    marginVertical: theme.spacing.xxl,
+    justifyContent: "center",
   },
   pressed: { opacity: 0.8, transform: [{ scale: 0.98 }] },
-  // Select the button text in Figma.
+
   label: {
-    fontSize: theme.text.body, // Typography → Font size → theme.text
-    fontWeight: 500, // Typography → weight: 'normal', '500', '600' or 'bold'
-    color: theme.colors.text, // Fill of the text → theme.colors
+    fontSize: theme.text.body,
+    fontWeight: 500,
+    color: theme.colors.text,
   },
 });

@@ -1,7 +1,7 @@
 import { palette } from "@/constants/colors";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Alert, ScrollView, StyleSheet, View } from "react-native";
 
 import FormField from "../components/FormField";
 import InlineLink from "../components/InlineLink";
@@ -218,24 +218,10 @@ export default function Login() {
 
       {!isRegistering && (
         <>
-          <Text style={styles.or}>Or</Text>
-
           <View style={styles.social}>
-            <SocialButton
-              label="Login with Email"
-              icon="logo-instagram"
-              onPress={() => {}}
-            />
-
             <SocialButton
               label="Login with Google"
               icon="logo-google"
-              onPress={() => {}}
-            />
-
-            <SocialButton
-              label="Login with Apple"
-              icon="logo-apple"
               onPress={() => {}}
             />
           </View>
