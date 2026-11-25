@@ -6,6 +6,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
 
 import { palette } from "@/constants/colors";
+import { getWeeklyLearningMinutes } from "@/storage/learningTime";
 import { getCompletedNodeIds } from "@/storage/mapProgress";
 import { loadUser } from "@/storage/user";
 
@@ -30,7 +31,7 @@ export default function Index() {
 
   const [userName, setUserName] = useState("creativo");
   const [completedNodeIds, setCompletedNodeIds] = useState<string[]>([]);
-
+  const [weeklyMinutes, setWeeklyMinutes] = useState(0);
   // Load user information and progress whenever Home receives focus
   useFocusEffect(
     useCallback(() => {
@@ -38,9 +39,10 @@ export default function Index() {
 
       const loadHomeData = async () => {
         try {
-          const [user, completedNodes] = await Promise.all([
+          const [user, completedNodes, minutes] = await Promise.all([
             loadUser(),
             getCompletedNodeIds(),
+            getWeeklyLearningMinutes(),
           ]);
 
           if (isActive) {
@@ -49,6 +51,7 @@ export default function Index() {
             }
 
             setCompletedNodeIds(completedNodes);
+            setWeeklyMinutes(minutes);
           }
         } catch (error) {
           console.error("Error loading Home data:", error);
@@ -166,7 +169,7 @@ export default function Index() {
         </Animated.View>
 
         <Animated.View entering={FadeInDown.delay(400).duration(350)}>
-          <WeeklyMinutes minutes={0} />
+          <WeeklyMinutes minutes={weeklyMinutes} />
         </Animated.View>
 
         <Animated.View entering={FadeInDown.delay(500).duration(350)}>

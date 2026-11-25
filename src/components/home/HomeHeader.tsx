@@ -1,7 +1,7 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { getXPProgress } from "../../storage/xpProgress";
 
@@ -41,13 +41,14 @@ export default function HomeHeader({ onNotificationsPress }: HomeHeaderProps) {
   return (
     <View style={styles.container}>
       <View style={styles.searchContainer}>
-        <Ionicons name="search-outline" size={20} color="#888888" />
-
-        <TextInput
-          style={styles.input}
-          placeholder="Buscar cursos o lecciones..."
-          placeholderTextColor="#888888"
-        />
+        <Pressable
+          style={styles.profileButton}
+          onPress={handleProfilePress}
+          accessibilityRole="button"
+          accessibilityLabel="Abrir perfil"
+        >
+          <Ionicons name="person-outline" size={22} color="#FFFFFF" />
+        </Pressable>
       </View>
 
       <View style={styles.xpContainer}>
@@ -64,15 +65,6 @@ export default function HomeHeader({ onNotificationsPress }: HomeHeaderProps) {
       >
         <Ionicons name="notifications-outline" size={22} color="#FFFFFF" />
       </Pressable>
-
-      <Pressable
-        style={styles.profileButton}
-        onPress={handleProfilePress}
-        accessibilityRole="button"
-        accessibilityLabel="Abrir perfil"
-      >
-        <Ionicons name="person-outline" size={22} color="#FFFFFF" />
-      </Pressable>
     </View>
   );
 }
@@ -81,7 +73,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 8,
+    gap: 25,
     width: "100%",
   },
 
@@ -90,18 +82,10 @@ const styles = StyleSheet.create({
     minWidth: 0,
     height: 46,
     borderRadius: 14,
-    backgroundColor: "#292929",
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 12,
     gap: 8,
-  },
-
-  input: {
-    flex: 1,
-    minWidth: 0,
-    color: "#FFFFFF",
-    fontSize: 13,
   },
 
   xpContainer: {
@@ -109,7 +93,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    gap: 4,
+    gap: 8,
     paddingHorizontal: 9,
     borderRadius: 14,
     backgroundColor: "#292929",
@@ -122,8 +106,8 @@ const styles = StyleSheet.create({
   },
 
   iconButton: {
-    width: 42,
-    height: 42,
+    width: 52,
+    height: 52,
     borderRadius: 50,
     backgroundColor: "#292929",
     alignItems: "center",
@@ -131,8 +115,8 @@ const styles = StyleSheet.create({
   },
 
   profileButton: {
-    width: 42,
-    height: 42,
+    width: 52,
+    height: 52,
     borderRadius: 50,
     backgroundColor: "#6200EE",
     alignItems: "center",

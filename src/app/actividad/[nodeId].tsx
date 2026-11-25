@@ -1,6 +1,8 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useState } from "react";
+import { AppState } from "react-native";
+import { useFocusEffect } from "expo-router";
+import { useState,useCallback, useRef } from "react";
 import {
   Alert,
   Animated,
@@ -22,7 +24,9 @@ import type { MapNode, Region } from "../../types/map";
 import { completeNode, getCompletedNodeIds } from "../../storage/mapProgress";
 import { awardXPForNode } from "../../storage/xpProgress";
 import { getCompletedRegionIds } from "../../utils/mapProgress";
-
+import {
+  saveLearningSession,
+} from "../../storage/learningTime";
 // Porcentaje mín
 const PASSING_PERCENTAGE = 67;
 
@@ -52,19 +56,92 @@ export default function ActivityScreen() {
 function ActivityContent({ nodeId }: { nodeId: string }) {
   const router = useRouter();
 
+  // Iniciar el conteo del tiempo
+const startLearningTimer = () => {
+  if (sessionStartRef.current !== null || !isAppActiveRef.current) {
+    return;
+  }
+
+  sessionStartRef.current = Date.now();
+};
+
+// Pausar el conteo y acumular los segundos
+const pauseLearningTimer = () => {
+  if (sessionStartRef.current === null) {
+    return;
+  }
+
+  const elapsedMilliseconds = Date.now() - sessionStartRef.current;
+
+  accumulatedTimeRef.current += Math.floor(elapsedMilliseconds / 1000);
+
+  sessionStartRef.current = null;
+};
+
+// Guardar el tiempo acumulado
+const saveLearningTime = async () => {
+  if (isSavingTimeRef.current) {
+    return;
+  }
+
+  pauseLearningTimer();
+
+  const durationSeconds = accumulatedTimeRef.current;
+
+  if (durationSeconds <= 0) {
+    return;
+  }
+
+  isSavingTimeRef.current = true;
+
+  try {
+    await saveLearningSession(nodeId, durationSeconds);
+    accumulatedTimeRef.current = 0;
+  } catch (error) {
+    console.error("No se pudo guardar el tiempo de aprendizaje:", error);
+  } finally {
+    isSavingTimeRef.current = false;
+  }
+};
+// Controlar el tiempo según el estado de la pantalla
+useFocusEffect(
+  useCallback(() => {
+    isAppActiveRef.current = AppState.currentState === "active";
+
+    if (isAppActiveRef.current) {
+      startLearningTimer();
+    }
+
+    const subscription = AppState.addEventListener(
+      "change",
+      (nextAppState) => {
+        if (nextAppState === "active") {
+          isAppActiveRef.current = true;
+          startLearningTimer();
+        } else {
+          isAppActiveRef.current = false;
+          pauseLearningTimer();
+        }
+      },
+    );
+
+    return () => {
+      subscription.remove();
+      isAppActiveRef.current = false;
+      void saveLearningTime();
+    };
+  }, [nodeId]),
+);
+// Control del tiempo
+const sessionStartRef = useRef<number | null>(null);
+const accumulatedTimeRef = useRef(0);
+const isAppActiveRef = useRef(true);
+const isSavingTimeRef = useRef(false);
   const [isSaving, setIsSaving] = useState(false);
   const [completedRegion, setCompletedRegion] = useState<Region | null>(null);
-
-  // Control del avance de la actividad
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
-
-  // Respuesta seleccionada
   const [selectedOptionId, setSelectedOptionId] = useState<string | null>(null);
-
-  // Resultados de las preguntas
   const [correctAnswers, setCorrectAnswers] = useState(0);
-
-  // Control de la pantalla de resultados
   const [showResults, setShowResults] = useState(false);
 
   // Animaciones
