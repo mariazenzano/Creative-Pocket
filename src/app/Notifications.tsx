@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Alert, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import NotifyReminderCard from "@/components/NotifyReminderCard";
 import ClearNotificationsButton from "@/components/notification/ClearNotificationsButton";
 import NotificationsEmptyState from "@/components/notification/NotificationsEmptyState";
 import NotificationsHeader from "@/components/notification/NotificationsHeader";
@@ -59,6 +60,7 @@ export default function Notifications() {
   return (
     <SafeAreaView style={styles.screen} edges={["top", "left", "right"]}>
       <NotificationsHeader onBack={() => router.back()} />
+      <NotifyReminderCard />
 
       {notifications === null ? null : notifications.length > 0 ? (
         <>
