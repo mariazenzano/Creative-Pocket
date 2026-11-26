@@ -109,3 +109,14 @@ export async function getWeeklyLearningMinutes(): Promise<number> {
 
   return Math.floor(weeklySeconds / 60);
 }
+// Obtener el tiempo total de aprendizaje
+export async function getTotalLearningMinutes(): Promise<number> {
+  const entries = await getLearningTimeEntries();
+
+  const totalSeconds = entries.reduce(
+    (total, entry) => total + entry.durationSeconds,
+    0,
+  );
+
+  return Math.floor(totalSeconds / 60);
+}

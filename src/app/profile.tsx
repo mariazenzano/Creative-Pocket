@@ -1,5 +1,6 @@
 import * as Clipboard from "expo-clipboard";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
+import { useCallback, useState } from "react";
 import { Alert, ScrollView, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -9,43 +10,88 @@ import ProfileHeader from "../components/profile/ProfileHeader";
 import ProgressSection from "../components/profile/ProgressSection";
 
 import { theme } from "../constants/theme";
+import { mapNodes } from "../data/mapNodes";
+import { getTotalLearningMinutes } from "../storage/learningTime";
+import { getCompletedNodeIds, getDailyCompletedNodeCount } from "../storage/mapProgress";
+import { loadUser } from "../storage/user";
+import { getXPProgress } from "../storage/xpProgress";
+
+const XP_PER_LEVEL = 90;
+const DAILY_GOAL = 4;
 
 export default function PerfilScreen() {
+  const [userName, setUserName] = useState("creativo");
+  const [userId, setUserId] = useState("ID pendiente");
 
-  // Temporary profile information
-  const userName = "María Fernanda Zenzano";
-  const userId = "mafe_0789";
+  const [completedLessons, setCompletedLessons] = useState(0);
+  const [totalLessons, setTotalLessons] = useState(mapNodes.length);
+  const [totalXP, setTotalXP] = useState(0);
+  const [learningMinutes, setLearningMinutes] = useState(0);
+  const [dailyLessons, setDailyLessons] = useState(0);
 
-  // Copy user ID
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+
+      const loadProfileData = async () => {
+        try {
+          const [user, completedNodes, xpProgress, totalMinutes, dailyCount] =
+            await Promise.all([
+              loadUser(),
+              getCompletedNodeIds(),
+              getXPProgress(),
+              getTotalLearningMinutes(),
+              getDailyCompletedNodeCount(),
+            ]);
+
+          if (!isActive) return;
+
+          if (user) {
+            setUserName(user.name);
+            setUserId(user.id);
+          }
+
+          setCompletedLessons(completedNodes.length);
+          setTotalXP(xpProgress.totalXP);
+          setLearningMinutes(totalMinutes);
+          setDailyLessons(dailyCount);
+        } catch (error) {
+          console.error("Error al cargar las estadísticas:", error);
+        }
+      };
+
+      loadProfileData();
+
+      return () => {
+        isActive = false;
+      };
+    }, []),
+  );
+
+  const level = Math.floor(totalXP / XP_PER_LEVEL) + 1;
+  const currentLevelXP = totalXP % XP_PER_LEVEL;
+  const nextLevelXP = XP_PER_LEVEL;
+
   const handleCopyId = async () => {
     await Clipboard.setStringAsync(userId);
-
     Alert.alert("ID copiado", "Tu identificador se copió correctamente.");
   };
 
-  // Navigate to ranking
   const handleRankingPress = () => {
     router.push("/ranking");
   };
 
-  // Logout action
   const handleLogout = () => {
     Alert.alert("Cerrar sesión", "¿Deseas cerrar tu sesión?", [
-      {
-        text: "Cancelar",
-        style: "cancel",
-      },
+      { text: "Cancelar", style: "cancel" },
       {
         text: "Cerrar sesión",
         style: "destructive",
-        onPress: () => {
-          router.replace("/Login");
-        },
+        onPress: () => router.replace("/Login"),
       },
     ]);
   };
 
-  // Change account action
   const handleChangeAccount = () => {
     Alert.alert(
       "Cambiar de cuenta",
@@ -68,13 +114,20 @@ export default function PerfilScreen() {
         />
 
         <LevelBanner
-          level={8}
-          currentXP={24}
-          nextLevelXP={30}
+          level={level}
+          currentXP={currentLevelXP}
+          nextLevelXP={nextLevelXP}
           onRankingPress={handleRankingPress}
         />
 
-        <ProgressSection />
+        <ProgressSection
+          completedLessons={completedLessons}
+          totalLessons={totalLessons}
+          totalXP={totalXP}
+          learningMinutes={learningMinutes}
+          dailyLessons={dailyLessons}
+          dailyGoal={DAILY_GOAL}
+        />
 
         <AccountActions
           onLogout={handleLogout}
@@ -90,11 +143,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: theme.colors.background,
   },
-
   scrollView: {
     flex: 1,
   },
-
   content: {
     paddingHorizontal: 20,
     paddingTop: 20,

@@ -1,6 +1,8 @@
-import { useRouter } from "expo-router";
+
+import { useRouter, type Href } from "expo-router";
 import { useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
+
 import { theme } from "../../constants/theme";
 
 import CourseList, { type Course } from "../../components/Courses/CourseList";
@@ -12,67 +14,109 @@ import LevelFilter, {
   type CourseLevel,
 } from "../../components/Courses/LevelFilter";
 
-// Cursos de prueba
-const courses: Course[] = [
-  {
-    id: "course-01",
-    title: "Fundamentos de ilustración",
-    branch: "Ilustración digital",
-    level: "easy",
-    duration: "4 horas",
-    description:
-      "Aprende los principios básicos del dibujo y la ilustración digital.",
-    tags: ["Dibujo", "Creatividad", "Color"],
-    iconName: "color-palette-outline",
-  },
-  {
-    id: "course-02",
-    title: "Fotografía creativa",
-    branch: "Fotografía",
-    level: "intermediate",
-    duration: "6 horas",
-    description:
-      "Explora la composición, la luz y la narrativa visual mediante la fotografía.",
-    tags: ["Fotografía", "Composición", "Luz"],
-    iconName: "camera-outline",
-  },
-  {
-    id: "course-03",
-    title: "Introducción a programación",
-    branch: "Desarrollo digital",
-    level: "advanced",
-    duration: "8 horas",
-    description:
-      "Descubre los fundamentos de la programación aplicada a proyectos digitales.",
-    tags: ["Código", "Lógica", "Tecnología"],
-    iconName: "code-slash-outline",
-  },
-];
+import { mapNodes } from "../../data/mapNodes";
+import { regions } from "../../data/regions";
+
+// Nivel asignado a cada región
+const regionLevels: Record<string, Exclude<CourseLevel, "all">> = {
+  "graphic-design": "easy",
+  "web-design": "intermediate",
+  audiovisual: "easy",
+  "3d-design": "advanced",
+};
+
+// Creamos los cursos a partir de las regiones reales
+const mapCourses: Course[] = regions.map((region): Course => {
+  const regionNodes = mapNodes.filter(
+    (node) => node.regionId === region.id,
+  );
+
+  return {
+    id: region.id,
+    title: region.title,
+    branch: "Mapa de aprendizaje",
+    level: regionLevels[region.id] ?? "easy",
+    duration: `${regionNodes.length} actividades`,
+    description: region.description,
+    tags: ["Lecciones", "Ejercicios", "Proyectos"],
+    iconName: region.iconName as Course["iconName"],
+  };
+});
+
+// Tarjeta adicional: tutorial de cuestionarios
+const tutorialCourse: Course = {
+  id: "quiz-tutorial",
+  title: "Tutorial de cuestionarios",
+  branch: "Aprende a resolver los quizzes",
+  level: "easy",
+  duration: "Guía rápida",
+  description:
+    "Conoce cómo funcionan los cuestionarios y practica tus conocimientos.",
+  tags: ["Preguntas", "Respuestas", "Práctica"],
+  iconName: "help-circle-outline",
+};
+
+// Lista final de cursos
+const courses: Course[] = [...mapCourses, tutorialCourse];
 
 export default function Cursos() {
   const router = useRouter();
 
   const [activeTab, setActiveTab] = useState<CourseTab>("my-courses");
-
   const [recentCourseIds, setRecentCourseIds] = useState<string[]>([]);
-
   const [activeLevel, setActiveLevel] = useState<CourseLevel>("all");
 
-  // Registra el curso y abre el quiz existente
+  // Texto escrito en la barra de búsqueda
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Registrar curso reciente y abrir su destino
   const handleContinue = (courseId: string) => {
     setRecentCourseIds((previousIds) => [
       courseId,
       ...previousIds.filter((id) => id !== courseId),
     ]);
 
-    router.push("/quiz");
+    if (courseId === "quiz-tutorial") {
+      router.push("/quiz");
+      return;
+    }
+
+    router.push(`/mapa/${courseId}` as Href);
   };
 
-  // Cursos que se muestran según la pestaña activa
-  const visibleCourses =
-    activeTab === "recent"
-      ? courses.filter((course) => recentCourseIds.includes(course.id))
-      : courses;
+  // Filtrar cursos según pestaña y búsqueda
+  const visibleCourses = courses.filter((course) => {
+    const query = searchQuery.trim().toLowerCase();
+
+    // Comprobar pestaña activa
+    const matchesTab =
+      activeTab !== "recent" || recentCourseIds.includes(course.id);
+
+    // Buscar en información del curso
+    const matchesCourse = [
+      course.title,
+      course.branch,
+      course.description,
+      ...course.tags,
+    ]
+      .join(" ")
+      .toLowerCase()
+      .includes(query);
+
+    // Buscar también dentro de las actividades del mapa
+    const matchesLesson = mapNodes.some((node) => {
+      if (node.regionId !== course.id) return false;
+
+      return `${node.title} ${node.description}`
+        .toLowerCase()
+        .includes(query);
+    });
+
+    return (
+      matchesTab &&
+      (query === "" || matchesCourse || matchesLesson)
+    );
+  });
 
   return (
     <View style={styles.screen}>
@@ -80,7 +124,10 @@ export default function Cursos() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.content}
       >
-        <CoursesHeader />
+        <CoursesHeader
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+        />
 
         <CourseTabs
           activeTab={activeTab}
@@ -94,7 +141,10 @@ export default function Cursos() {
           }}
         />
 
-        <LevelFilter activeLevel={activeLevel} onLevelChange={setActiveLevel} />
+        <LevelFilter
+          activeLevel={activeLevel}
+          onLevelChange={setActiveLevel}
+        />
 
         <CourseList
           courses={visibleCourses}

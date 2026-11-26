@@ -5,11 +5,13 @@ import { Pressable, StyleSheet, TextInput, View } from "react-native";
 type CoursesHeaderProps = {
   onNotificationsPress?: () => void;
   onProfilePress?: () => void;
+  searchQuery: string;
+  onSearchChange: (text: string) => void;
 };
 
 export default function CoursesHeader({
-  onNotificationsPress,
-  onProfilePress,
+  searchQuery,
+  onSearchChange,
 }: CoursesHeaderProps) {
   const router = useRouter();
 
@@ -25,10 +27,20 @@ export default function CoursesHeader({
         <Ionicons name="search-outline" size={20} color="#888888" />
 
         <TextInput
-          style={styles.input}
           placeholder="Buscar cursos o lecciones..."
           placeholderTextColor="#888888"
+          style={styles.input}
+          value={searchQuery}
+          onChangeText={onSearchChange}
+          returnKeyType="search"
+          autoCorrect={false}
         />
+
+        {searchQuery.length > 0 && (
+          <Pressable onPress={() => onSearchChange("")}>
+            <Ionicons name="close-circle" size={18} color="#888888" />
+          </Pressable>
+        )}
       </View>
 
       {/* Notificaciones */}
@@ -41,10 +53,10 @@ export default function CoursesHeader({
         <Ionicons name="notifications-outline" size={22} color="#FFFFFF" />
       </Pressable>
 
-      {/* Perfil de usuario */}
+      {/* Perfil */}
       <Pressable
         style={styles.profileButton}
-        onPress={() => router.push("/perfil")}
+        onPress={() => router.push("/profile")}
         accessibilityRole="button"
         accessibilityLabel="Abrir perfil"
       >

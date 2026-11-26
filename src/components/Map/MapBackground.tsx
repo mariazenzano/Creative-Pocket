@@ -1,15 +1,16 @@
 import Svg, {
-    Circle,
-    Defs,
-    Ellipse,
-    G,
-    LinearGradient,
-    Path,
-    RadialGradient,
-    Stop,
+  Circle,
+  Defs,
+  Ellipse,
+  G,
+  LinearGradient,
+  Path,
+  RadialGradient,
+  Stop,
 } from "react-native-svg";
 
 import { theme } from "../../constants/theme";
+import { Cloud, FloatingIsland, Star } from "./MapBackgroundElements";
 
 type MapBackgroundProps = {
   width: number;
@@ -26,7 +27,6 @@ export default function MapBackground({ width, height }: MapBackgroundProps) {
       style={styles.background}
     >
       <Defs>
-        {/* Main sky gradient */}
         <LinearGradient id="worldGradient" x1="0" y1="0" x2="0" y2="1">
           <Stop offset="0" stopColor={theme.colors.background} />
           <Stop
@@ -38,7 +38,6 @@ export default function MapBackground({ width, height }: MapBackgroundProps) {
           <Stop offset="1" stopColor={theme.colors.background} />
         </LinearGradient>
 
-        {/* Ambient light */}
         <RadialGradient id="purpleGlow" cx="50%" cy="50%" r="50%">
           <Stop
             offset="0"
@@ -57,26 +56,22 @@ export default function MapBackground({ width, height }: MapBackgroundProps) {
           <Stop offset="1" stopColor={theme.colors.secondary} stopOpacity={0} />
         </RadialGradient>
 
-        {/* Cloud volume */}
         <LinearGradient id="cloudGradient" x1="0" y1="0" x2="0" y2="1">
           <Stop offset="0" stopColor="#FFFFFF" stopOpacity={0.2} />
           <Stop offset="1" stopColor={theme.colors.card} stopOpacity={0.7} />
         </LinearGradient>
 
-        {/* Floating island */}
         <LinearGradient id="smallIslandGradient" x1="0" y1="0" x2="0" y2="1">
           <Stop offset="0" stopColor="#9C8BD7" />
           <Stop offset="1" stopColor="#51427F" />
         </LinearGradient>
       </Defs>
 
-      {/* Main sky */}
       <Path
         d={`M 0 0 H ${width} V ${height} H 0 Z`}
         fill="url(#worldGradient)"
       />
 
-      {/* Atmospheric light layers */}
       <Ellipse
         cx={width * 0.15}
         cy={190}
@@ -109,7 +104,6 @@ export default function MapBackground({ width, height }: MapBackgroundProps) {
         fill="url(#blueGlow)"
       />
 
-      {/* Distant clouds */}
       <G opacity={0.2}>
         <Cloud x={width * 0.2} y={230} scale={1} />
         <Cloud x={width * 0.82} y={470} scale={0.85} />
@@ -118,7 +112,6 @@ export default function MapBackground({ width, height }: MapBackgroundProps) {
         <Cloud x={width * 0.22} y={1330} scale={0.8} />
       </G>
 
-      {/* Mid-distance clouds */}
       <G opacity={0.11}>
         <Ellipse
           cx={width * 0.78}
@@ -143,14 +136,12 @@ export default function MapBackground({ width, height }: MapBackgroundProps) {
         />
       </G>
 
-      {/* Floating islands in the distance */}
       <G opacity={0.3}>
         <FloatingIsland x={width * 0.12} y={390} scale={0.75} />
         <FloatingIsland x={width * 0.85} y={850} scale={0.9} />
         <FloatingIsland x={width * 0.13} y={1250} scale={0.65} />
       </G>
 
-      {/* Small distant particles */}
       <G opacity={0.6}>
         <Circle
           cx={width * 0.12}
@@ -177,7 +168,6 @@ export default function MapBackground({ width, height }: MapBackgroundProps) {
         <Circle cx={width * 0.32} cy={1180} r={2} fill="#FFFFFF" />
       </G>
 
-      {/* Glowing stars */}
       <G
         stroke={theme.colors.secondary}
         strokeWidth={2}
@@ -190,7 +180,6 @@ export default function MapBackground({ width, height }: MapBackgroundProps) {
         <Star x={width * 0.14} y={1080} size={6} />
       </G>
 
-      {/* Floating bubbles */}
       <G
         fill="none"
         stroke={theme.colors.primary}
@@ -203,120 +192,6 @@ export default function MapBackground({ width, height }: MapBackgroundProps) {
         <Circle cx={width * 0.72} cy={410} r={5} />
       </G>
     </Svg>
-  );
-}
-
-/* Cloud made from overlapping soft shapes */
-function Cloud({ x, y, scale }: { x: number; y: number; scale: number }) {
-  return (
-    <G>
-      <Ellipse
-        cx={x}
-        cy={y + 9 * scale}
-        rx={43 * scale}
-        ry={10 * scale}
-        fill="url(#cloudGradient)"
-      />
-      <Circle
-        cx={x - 21 * scale}
-        cy={y}
-        r={13 * scale}
-        fill="url(#cloudGradient)"
-      />
-      <Circle
-        cx={x}
-        cy={y - 8 * scale}
-        r={19 * scale}
-        fill="url(#cloudGradient)"
-      />
-      <Circle
-        cx={x + 23 * scale}
-        cy={y}
-        r={14 * scale}
-        fill="url(#cloudGradient)"
-      />
-      <Ellipse
-        cx={x}
-        cy={y + 4 * scale}
-        rx={35 * scale}
-        ry={9 * scale}
-        fill="url(#cloudGradient)"
-      />
-    </G>
-  );
-}
-
-/* Small floating island with a visible rocky underside */
-function FloatingIsland({
-  x,
-  y,
-  scale,
-}: {
-  x: number;
-  y: number;
-  scale: number;
-}) {
-  return (
-    <G>
-      <Ellipse
-        cx={x}
-        cy={y + 22 * scale}
-        rx={40 * scale}
-        ry={7 * scale}
-        fill="#000000"
-        opacity={0.18}
-      />
-
-      <Path
-        d={`
-          M ${x - 40 * scale} ${y}
-          Q ${x} ${y - 19 * scale} ${x + 40 * scale} ${y}
-          L ${x + 29 * scale} ${y + 12 * scale}
-          L ${x + 10 * scale} ${y + 35 * scale}
-          L ${x - 9 * scale} ${y + 24 * scale}
-          L ${x - 29 * scale} ${y + 13 * scale}
-          Z
-        `}
-        fill="url(#smallIslandGradient)"
-      />
-
-      <Path
-        d={`
-          M ${x - 40 * scale} ${y}
-          Q ${x} ${y - 19 * scale} ${x + 40 * scale} ${y}
-          Q ${x} ${y + 4 * scale} ${x - 40 * scale} ${y}
-        `}
-        fill="#A99AE1"
-        opacity={0.7}
-      />
-
-      <Path
-        d={`
-          M ${x - 29 * scale} ${y + 13 * scale}
-          L ${x - 9 * scale} ${y + 24 * scale}
-          L ${x - 4 * scale} ${y + 36 * scale}
-          L ${x - 17 * scale} ${y + 25 * scale}
-          Z
-        `}
-        fill="#403463"
-        opacity={0.6}
-      />
-    </G>
-  );
-}
-
-/* Four-point decorative star */
-function Star({ x, y, size }: { x: number; y: number; size: number }) {
-  return (
-    <Path
-      d={`
-        M ${x} ${y - size}
-        L ${x} ${y + size}
-        M ${x - size} ${y}
-        L ${x + size} ${y}
-      `}
-      fill="none"
-    />
   );
 }
 

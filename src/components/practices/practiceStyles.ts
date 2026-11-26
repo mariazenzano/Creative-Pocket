@@ -1,0 +1,208 @@
+import { StyleSheet } from "react-native";
+import { theme } from "../../constants/theme";
+
+export const styles = StyleSheet.create({
+  screen: { flex: 1, backgroundColor: theme.colors.background },
+  content: {
+    padding: theme.spacing.lg,
+    paddingBottom: theme.spacing.xl,
+    gap: theme.spacing.xl,
+  },
+  heading: { gap: theme.spacing.sm },
+  title: {
+    fontSize: theme.text.title,
+    fontWeight: "bold",
+    color: theme.colors.text,
+  },
+  subtitle: {
+    fontSize: theme.text.body,
+    lineHeight: 21,
+    color: theme.colors.textMuted,
+  },
+  section: { gap: theme.spacing.md },
+  sectionHeading: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  sectionTitle: {
+    fontSize: theme.text.subtitle,
+    fontWeight: "bold",
+    color: theme.colors.text,
+  },
+  sectionDescription: {
+    fontSize: theme.text.small,
+    color: theme.colors.textMuted,
+    marginTop: -theme.spacing.sm,
+  },
+  challengeCard: {
+    backgroundColor: theme.colors.card,
+    borderRadius: theme.radius.max2,
+    borderWidth: 1,
+    borderColor: theme.colors.primarySoft,
+    padding: theme.spacing.lg,
+    gap: theme.spacing.md,
+  },
+  challengeTop: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  challengeTag: {
+    backgroundColor: theme.colors.primarySoft,
+    paddingHorizontal: theme.spacing.sm,
+    paddingVertical: theme.spacing.xs,
+    borderRadius: theme.radius.full,
+  },
+  challengeTagText: {
+    color: theme.colors.text,
+    fontSize: theme.text.caption,
+    fontWeight: "bold",
+    letterSpacing: 1,
+  },
+  challengeTitle: {
+    color: theme.colors.text,
+    fontSize: theme.text.heading,
+    fontWeight: "bold",
+  },
+  challengeDescription: {
+    color: theme.colors.textMuted,
+    fontSize: theme.text.small,
+    lineHeight: 20,
+  },
+  challengeDetails: {
+    flexDirection: "row",
+    gap: theme.spacing.lg,
+    marginTop: theme.spacing.xs,
+  },
+  detailItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: theme.spacing.xs,
+  },
+  detailText: {
+    color: theme.colors.text,
+    fontSize: theme.text.small,
+    fontWeight: "600",
+  },
+  challengeButton: {
+    backgroundColor: theme.colors.primarySoft,
+    borderRadius: theme.radius.md,
+    padding: theme.spacing.md,
+    marginTop: theme.spacing.xs,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: theme.spacing.sm,
+  },
+  challengeButtonText: {
+    color: theme.colors.text,
+    fontSize: theme.text.body,
+    fontWeight: "bold",
+  },
+  areasGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: theme.spacing.sm,
+  },
+  areaCard: {
+    width: "48%",
+    flexGrow: 1,
+    backgroundColor: theme.colors.card,
+    borderRadius: theme.radius.lg,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    padding: theme.spacing.md,
+    gap: theme.spacing.sm,
+  },
+  areaCardPressed: {
+    opacity: 0.75,
+    transform: [{ scale: 0.98 }],
+  },
+  areaIconContainer: {
+    width: theme.spacing.xxl,
+    height: theme.spacing.xxl,
+    borderRadius: theme.radius.md,
+    backgroundColor: theme.colors.primarySoft,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  areaTitle: {
+    color: theme.colors.text,
+    fontSize: theme.text.body,
+    fontWeight: "bold",
+  },
+  areaDescription: {
+    color: theme.colors.textMuted,
+    fontSize: theme.text.caption,
+    lineHeight: 16,
+    minHeight: 32,
+  },
+  areaFooter: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: theme.spacing.xs,
+  },
+  exploreText: {
+    color: theme.colors.text,
+    fontSize: theme.text.small,
+    fontWeight: "600",
+  },
+  statsMessage: {
+    color: theme.colors.textMuted,
+    fontSize: theme.text.small,
+  },
+  statsGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: theme.spacing.sm,
+  },
+  statCard: {
+    flex: 1,
+    minWidth: "30%",
+    backgroundColor: theme.colors.card,
+    borderRadius: theme.radius.lg,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    padding: theme.spacing.md,
+    gap: theme.spacing.xs,
+  },
+  statValue: {
+    color: theme.colors.text,
+    fontSize: theme.text.subtitle,
+    fontWeight: "bold",
+  },
+  statLabel: {
+    color: theme.colors.textMuted,
+    fontSize: theme.text.caption,
+  },
+  latestPractice: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: theme.spacing.sm,
+    padding: theme.spacing.md,
+    borderRadius: theme.radius.md,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+  },
+  latestPracticeInfo: {
+    flex: 1,
+    gap: theme.spacing.xs,
+  },
+  latestPracticeLabel: {
+    color: theme.colors.textMuted,
+    fontSize: theme.text.caption,
+  },
+  latestPracticeTitle: {
+    color: theme.colors.text,
+    fontSize: theme.text.small,
+    fontWeight: "600",
+  },
+  titleRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  mascot: { width: 100, height: 100 },
+});

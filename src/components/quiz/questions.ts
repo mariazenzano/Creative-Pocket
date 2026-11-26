@@ -64,16 +64,4 @@ export const quizQuestions: QuizQuestion[] = [
       { label: "Ambos bloques son incorrectos", isCorrect: false },
     ],
   },
-  {
-    id: "pregunta examen",
-    title: "paco",
-    prompt: "¿que?",
-    art: "hierarchy",
-    layout: "list",
-    answers: [
-      { label: "El bloque superior (A)", isCorrect: true },
-      { label: "El bloque inferior (B)", isCorrect: false },
-      { label: "Ambos bloques son incorrectos", isCorrect: false },
-    ],
-  },
 ];
